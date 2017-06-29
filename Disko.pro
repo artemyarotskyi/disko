@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         MainWindow.cpp \
     CommonUiControllers/LampLight.cpp \
-    CommonUiControllers/CornerGrabber.cpp
+    CommonUiControllers/CornerGrabber.cpp \
+    CommonUiControllers/Lamp.cpp
 
 HEADERS  += MainWindow.h \
     CommonUiControllers/LampLight.h \
-    CommonUiControllers/CornerGrabber.h
+    CommonUiControllers/CornerGrabber.h \
+    CommonUiControllers/Lamp.h
 
 FORMS    += MainWindow.ui

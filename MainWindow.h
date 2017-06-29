@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "CommonUiControllers/LampLight.h"
+#include "CommonUiControllers/Lamp.h"
 #include <QGraphicsScene>
 
 namespace Ui {
@@ -20,6 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    Lamp *lamp;
     LampLight *light;
     QGraphicsScene *scene;
 };
