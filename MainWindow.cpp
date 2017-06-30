@@ -19,16 +19,16 @@ MainWindow::MainWindow(QWidget *parent) :
     light->setParentItem(lamp);
     scene->addItem(light);
 
-    Lamp *lmp = new Lamp(0,0, 53, 53);
-    lmp->setPos(0,0);
-    lmp->setFlags(QGraphicsItem::ItemIsMovable);
-    lmp->setBrush(Qt::black);
-    scene->addItem(lmp);
+//    Lamp *lmp = new Lamp(0,0, 53, 53);
+//    lmp->setPos(0,0);
+//    lmp->setFlags(QGraphicsItem::ItemIsMovable);
+//    lmp->setBrush(Qt::black);
+//    scene->addItem(lmp);
 
-    LampLight *l = new LampLight();
-    l->setPos(0,55);
-    l->setParentItem(lmp);
-    scene->addItem(l);
+//    LampLight *l = new LampLight();
+//    l->setPos(0,55);
+//    l->setParentItem(lmp);
+//    scene->addItem(l);
 
     ui->graphicsViewCurrentRoom->setScene(scene);
 }

@@ -47,9 +47,6 @@ void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
     {
-
-        emit lampIsSelected();
-
         if(event->modifiers() == Qt::ShiftModifier)
         {
             mInitialPos = event->scenePos();

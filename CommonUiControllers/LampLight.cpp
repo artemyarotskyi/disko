@@ -7,7 +7,7 @@ LampLight::LampLight():
     mOutterBorderPen(),
     mLocation(0, 0),
     mDragStart(0, 0),
-    mBoundingRectWidht(195),
+    mBoundingRectWidht(203),
     mBoundingRectHeight(200),
     mWidth(27),
     mHeight(40),
@@ -34,8 +34,8 @@ void LampLight::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidge
 {
     QPolygon polygon;    
 
-//    painter->setBrush(Qt::green);
-//    painter->drawRect(0, 0, mBoundingRectWidht, mBoundingRectHeight);
+    painter->setBrush(Qt::green);
+    painter->drawRect(0, 0, mBoundingRectWidht, mBoundingRectHeight);
 
     polygon << QPoint(mDrawingWidth, mDrawingOriginY)
             << QPoint (mDrawingOriginX + mXCornerGrabBuffer, mDrawingHeight)
@@ -177,6 +177,6 @@ void LampLight::adjustSize(int x, int y)
     mWidth += x;
     mHeight += y;
 
-    mDrawingWidth = mWidth - mXCornerGrabBuffer;
+    mDrawingWidth = mWidth /*- mXCornerGrabBuffer*/;
     mDrawingHeight = mHeight - mYCornerGrabBuffer;
 }

@@ -13,11 +13,6 @@
 
 class Lamp : public QObject, public QGraphicsRectItem
 {
-public:
-    Q_OBJECT
-
-signals:
-    void lampIsSelected();
 
 public:
     Lamp(qreal x, qreal y, qreal width, qreal height);
