@@ -7,12 +7,14 @@ LampLight::LampLight():
     mOutterBorderPen(),
     mLocation(0, 0),
     mDragStart(0, 0),
-    mWidth(26),
+    mBoundingRectWidht(195),
+    mBoundingRectHeight(200),
+    mWidth(27),
     mHeight(40),
     mCornerDragStart(0, 0),
     mXCornerGrabBuffer(4),
     mYCornerGrabBuffer(4),
-    mDrawingWidth(mWidth - (mXCornerGrabBuffer*2)),
+    mDrawingWidth(mWidth),
     mDrawingHeight(mHeight - mYCornerGrabBuffer),
     mDrawingOriginX(0),
     mDrawingOriginY(0)
@@ -25,14 +27,19 @@ LampLight::LampLight():
 
 QRectF LampLight::boundingRect() const
 {
-    return QRectF(0, 0, mWidth, mHeight);
+    return QRectF(0, 0, mBoundingRectWidht, mBoundingRectHeight);
 }
 
 void LampLight::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
     QPolygon polygon;    
 
-    polygon << QPoint(mDrawingWidth / 2, mDrawingOriginY) << QPoint (mDrawingOriginX, mDrawingHeight) << QPoint(mDrawingWidth, mDrawingHeight);
+//    painter->setBrush(Qt::green);
+//    painter->drawRect(0, 0, mBoundingRectWidht, mBoundingRectHeight);
+
+    polygon << QPoint(mDrawingWidth, mDrawingOriginY)
+            << QPoint (mDrawingOriginX + mXCornerGrabBuffer, mDrawingHeight)
+            << QPoint(mDrawingWidth * 2, mDrawingHeight);
     painter->setBrush(Qt::yellow);
     painter->drawPolygon(polygon);
 }
@@ -125,9 +132,9 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         {
             newWidth = 27;
         }
-        if(newWidth > 200)
+        if(newWidth > 100)
         {
-            newWidth = 200;
+            newWidth = 100;
         }
 
         int newHeight = mHeight + (YaxisSign * yMoved);
@@ -162,7 +169,7 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 
 void LampLight::setCornerPosition()
 {
-    mCorners[0]->setPos(mDrawingOriginX - mXCornerGrabBuffer, mDrawingHeight);
+    mCorners[0]->setPos(mDrawingOriginX , mDrawingHeight);
 }
 
 void LampLight::adjustSize(int x, int y)

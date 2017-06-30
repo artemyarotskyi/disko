@@ -1,6 +1,7 @@
 #include "Lamp.h"
 #include <QAbstractGraphicsShapeItem>
 
+
 void rotateItem(QAbstractGraphicsShapeItem *shape, QPointF center1, QPointF moved, QPointF initial_pos)
 {
     QRectF bbox = shape->boundingRect().normalized();
@@ -38,12 +39,17 @@ Lamp::Lamp(qreal x, qreal y, qreal width, qreal height):
 
     mInitialCenter.setX(0.0);
     mInitialCenter.setY(0.0);
+
+    this->setFlags(QGraphicsItem::ItemIsSelectable);
 }
 
 void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
     {
+
+        emit lampIsSelected();
+
         if(event->modifiers() == Qt::ShiftModifier)
         {
             mInitialPos = event->scenePos();

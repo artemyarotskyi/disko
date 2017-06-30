@@ -35,6 +35,10 @@ private:
     QPen mOutterBorderPen;
     QPointF mLocation;
     QPointF mDragStart;
+
+    qreal mBoundingRectWidht;
+    qreal mBoundingRectHeight;
+
     qreal mWidth;
     qreal mHeight;
 
