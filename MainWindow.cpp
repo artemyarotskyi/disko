@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    lamp(new Lamp(0, 0, 52, 52)),
+    lamp(new Lamp(0, 0, 53, 53)),
     light(new LampLight()),
     scene(new QGraphicsScene())
 {
@@ -12,9 +12,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     lamp->setPos(0,0);
     lamp->setFlags(QGraphicsItem::ItemIsMovable);
+    lamp->setBrush(Qt::black);
     scene->addItem(lamp);
 
-    light->setPos(16,-37);
+    light->setPos(17,52);
     light->setParentItem(lamp);
     scene->addItem(light);
 
