@@ -16,7 +16,7 @@
 class LampLight : public QGraphicsItem
 {
 public:
-    LampLight();
+    LampLight(QGraphicsRectItem *parent = 0);
 
 private:
     virtual QRectF boundingRect() const;
@@ -29,7 +29,7 @@ private:
     virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
 
     void setCornerPosition();
-    void adjustSize(int x, int y);
+    void adjustSize(int x, int y);    
 
     QColor mOutterBorderColor;
     QPen mOutterBorderPen;

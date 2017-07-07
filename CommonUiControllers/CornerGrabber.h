@@ -29,8 +29,8 @@ public:
 private:
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent*);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
 
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneDragDropEvent *event);

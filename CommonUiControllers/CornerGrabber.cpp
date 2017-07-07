@@ -55,13 +55,13 @@ void CornerGrabber::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QW
     painter->fillRect(rect, brush);
 }
 
-void CornerGrabber::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+void CornerGrabber::hoverEnterEvent(QGraphicsSceneHoverEvent*)
 {
     mOutterborderColor = Qt::red;
     this->update(0, 0, mWidth, mHeight);
 }
 
-void CornerGrabber::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+void CornerGrabber::hoverLeaveEvent(QGraphicsSceneHoverEvent*)
 {
     mOutterborderColor = Qt::black;
     this->update(0, 0, mWidth, mHeight);

@@ -2,7 +2,7 @@
 
 #include "math.h"
 
-LampLight::LampLight():
+LampLight::LampLight(QGraphicsRectItem *parent):
     mOutterBorderColor(Qt::black),
     mOutterBorderPen(),
     mLocation(0, 0),
@@ -21,6 +21,8 @@ LampLight::LampLight():
 {
     mOutterBorderPen.setWidth(1);
     mOutterBorderPen.setColor(mOutterBorderColor);
+
+    this->setParentItem(parent);
 
     this->setAcceptHoverEvents(true);
 }
@@ -177,6 +179,6 @@ void LampLight::adjustSize(int x, int y)
     mWidth += x;
     mHeight += y;
 
-    mDrawingWidth = mWidth /*- mXCornerGrabBuffer*/;
+    mDrawingWidth = mWidth;
     mDrawingHeight = mHeight - mYCornerGrabBuffer;
 }

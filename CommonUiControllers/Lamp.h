@@ -10,12 +10,15 @@
 #include <QPen>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsRectItem>
+#include <CommonUiControllers/LampLight.h>
 
 class Lamp : public QObject, public QGraphicsRectItem
 {
 
 public:
-    Lamp(qreal x, qreal y, qreal width, qreal height);
+    Lamp(qreal x, qreal y, qreal width, qreal height);    
+
+    LampLight* getLightLamp();
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -24,6 +27,8 @@ public:
 private:
     QPointF mInitialPos;
     QPointF mInitialCenter;
+
+    LampLight *mLampLight;
 };
 
 #endif // LAMP_H
