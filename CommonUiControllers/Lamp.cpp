@@ -33,7 +33,8 @@ void rotateItem(QAbstractGraphicsShapeItem *shape, QPointF center1, QPointF move
 
 Lamp::Lamp(qreal x, qreal y, qreal width, qreal height):
     QGraphicsRectItem(x, y, width, height),
-    mLampLight(new LampLight(this))
+    mLampLight(new LampLight(this)),
+    mZindex(0)
 {
     mInitialPos.setX(0.0);
     mInitialPos.setY(0.0);
@@ -46,20 +47,11 @@ Lamp::Lamp(qreal x, qreal y, qreal width, qreal height):
     mLampLight->setPos(0,55);
 }
 
-Lamp::~Lamp()
-{
-    delete mLampLight;
-}
-
-LampLight *Lamp::getLightLamp()
-{
-    return mLampLight;
-}
-
 void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
     {
+        this->setZValue(++mZindex);
         if(event->modifiers() == Qt::ShiftModifier)
         {
             mInitialPos = event->scenePos();

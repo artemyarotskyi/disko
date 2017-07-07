@@ -16,9 +16,7 @@ class Lamp : public QObject, public QGraphicsRectItem
 {
 
 public:
-    Lamp(qreal x, qreal y, qreal width, qreal height);    
-
-    LampLight* getLightLamp();
+    Lamp(qreal x, qreal y, qreal width, qreal height);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -27,6 +25,8 @@ public:
 private:
     QPointF mInitialPos;
     QPointF mInitialCenter;
+
+    int mZindex;
 
     LampLight *mLampLight;
 };

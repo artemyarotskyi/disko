@@ -18,12 +18,15 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected slots:
+    void createCamera();
+
 private:
     Ui::MainWindow *ui;
 
-    Lamp *lamp;
-    LampLight *light;
-    QGraphicsScene *scene;
+    Lamp *mLamp;
+    LampLight *mLight;
+    QGraphicsScene *mScene;
 };
 
 #endif // MAINWINDOW_H
