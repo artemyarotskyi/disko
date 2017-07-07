@@ -9,15 +9,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mScene(new QGraphicsScene())
 {
     ui->setupUi(this);
-
-    connect(ui->btnAddLamp, SIGNAL(clicked()), this, SLOT(createCamera()));
-
-//    lamp->setPos(0,0);
-//    lamp->setFlags(QGraphicsItem::ItemIsMovable);
-//    lamp->setBrush(Qt::black);
-//    scene->addItem(lamp);
-
     ui->graphicsViewCurrentRoom->setScene(mScene);
+
+    SubscribeToFormEvents();
 }
 
 MainWindow::~MainWindow()
@@ -33,4 +27,9 @@ void MainWindow::createCamera()
     lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
     lamp->setBrush(Qt::black);
     mScene->addItem(lamp);
+}
+
+void MainWindow::SubscribeToFormEvents()
+{
+    connect(ui->btnAddLamp, SIGNAL(clicked()), this, SLOT(createCamera()));
 }

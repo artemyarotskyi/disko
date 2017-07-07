@@ -22,6 +22,8 @@ protected slots:
     void createCamera();
 
 private:
+    void SubscribeToFormEvents();
+
     Ui::MainWindow *ui;
 
     Lamp *mLamp;
