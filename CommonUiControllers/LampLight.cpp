@@ -36,8 +36,8 @@ void LampLight::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidge
 {
     QPolygon polygon;    
 
-//    painter->setBrush(Qt::green);
-//    painter->drawRect(0, 0, mBoundingRectWidht, mBoundingRectHeight);
+    painter->setBrush(Qt::green);
+    painter->drawRect(0, 0, mBoundingRectWidht, mBoundingRectHeight);
 
     polygon << QPoint(mDrawingWidth, mDrawingOriginY)
             << QPoint (mDrawingOriginX + mXCornerGrabBuffer, mDrawingHeight)

@@ -24,11 +24,11 @@ protected slots:
 private:
     void SubscribeToFormEvents();
 
-    Ui::MainWindow *ui;
-
-    Lamp *mLamp;
-    LampLight *mLight;
+    Ui::MainWindow *ui;    
     QGraphicsScene *mScene;
+
+    int mWidth = 601;
+    int mHeight = 480;
 };
 
 #endif // MAINWINDOW_H
