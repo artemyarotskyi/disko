@@ -29,6 +29,7 @@ private:
     virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
 
     void setCornerPosition();
+    void setLightCenterPosition();
     void adjustSize(int x, int y);    
 
     QColor mOutterBorderColor;

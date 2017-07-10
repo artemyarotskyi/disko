@@ -6,8 +6,8 @@ CornerGrabber::CornerGrabber(QGraphicsItem *parent, int corner):
     mouseDownY(0),
     mOutterborderColor(Qt::black),
     mOutterborderPen(),
-    mWidth(4),
-    mHeight(4),
+    mWidth(3),
+    mHeight(3),
     mCorner(corner),
     mMouseButtonState(kMouseReleased)
 {

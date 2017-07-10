@@ -44,7 +44,7 @@ Lamp::Lamp(qreal x, qreal y, qreal width, qreal height):
 
     this->setFlags(QGraphicsItem::ItemIsSelectable);
 
-    mLampLight->setPos(0,55);
+    mLampLight->setPos(0,53);
 }
 
 void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)

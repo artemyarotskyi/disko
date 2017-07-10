@@ -7,14 +7,12 @@ LampLight::LampLight(QGraphicsRectItem *parent):
     mOutterBorderPen(),
     mLocation(0, 0),
     mDragStart(0, 0),
-    mBoundingRectWidht(203),
-    mBoundingRectHeight(200),
-    mWidth(27),
+    mWidth(42),
     mHeight(40),
     mCornerDragStart(0, 0),
     mXCornerGrabBuffer(4),
     mYCornerGrabBuffer(4),
-    mDrawingWidth(mWidth),
+    mDrawingWidth(mWidth - mXCornerGrabBuffer),
     mDrawingHeight(mHeight - mYCornerGrabBuffer),
     mDrawingOriginX(0),
     mDrawingOriginY(0)
@@ -29,20 +27,21 @@ LampLight::LampLight(QGraphicsRectItem *parent):
 
 QRectF LampLight::boundingRect() const
 {
-    return QRectF(0, 0, mBoundingRectWidht, mBoundingRectHeight);
+    return QRectF(0, 0, mWidth, mHeight);
 }
 
 void LampLight::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
     QPolygon polygon;    
 
-    painter->setBrush(Qt::green);
-    painter->drawRect(0, 0, mBoundingRectWidht, mBoundingRectHeight);
+//    painter->setBrush(Qt::green);
+//    painter->drawRect(0, 0, mWidth, mHeight);
 
-    polygon << QPoint(mDrawingWidth, mDrawingOriginY)
+    polygon << QPoint(mWidth / 2, mDrawingOriginY)
             << QPoint (mDrawingOriginX + mXCornerGrabBuffer, mDrawingHeight)
-            << QPoint(mDrawingWidth * 2, mDrawingHeight);
+            << QPoint(mDrawingWidth, mDrawingHeight);
     painter->setBrush(Qt::yellow);
+    setLightCenterPosition();
     painter->drawPolygon(polygon);
 }
 
@@ -130,24 +129,24 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         int yMoved = corner->mouseDownY - y;
 
         int newWidth = mWidth + (XaxisSign * xMoved);
-        if(newWidth < 27)
+        if(newWidth < 28)
         {
-            newWidth = 27;
+            newWidth = 28;
         }
-        if(newWidth > 100)
-        {
-            newWidth = 100;
-        }
+//        if(newWidth > 101)
+//        {
+//            newWidth = 101;
+//        }
 
         int newHeight = mHeight + (YaxisSign * yMoved);
         if(newHeight < 40)
         {
             newHeight = 40;
         }
-        if(newHeight > 200)
-        {
-            newHeight = 200;
-        }
+//        if(newHeight > 201)
+//        {
+//            newHeight = 201;
+//        }
 
         int deltaWidth = newWidth - mWidth;
         int deltaHeight = newHeight - mHeight;
@@ -161,6 +160,7 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         this->setPos(newXpos,this->pos().y());
 
         setCornerPosition();
+        setLightCenterPosition();
 
         this->update();
     }
@@ -171,7 +171,12 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 
 void LampLight::setCornerPosition()
 {
-    mCorners[0]->setPos(mDrawingOriginX , mDrawingHeight);
+    mCorners[0]->setPos(mDrawingOriginX+1, mDrawingHeight);
+}
+
+void LampLight::setLightCenterPosition()
+{
+    this->setPos((53 - mWidth) / 2, 53);
 }
 
 void LampLight::adjustSize(int x, int y)
@@ -179,6 +184,6 @@ void LampLight::adjustSize(int x, int y)
     mWidth += x;
     mHeight += y;
 
-    mDrawingWidth = mWidth;
+    mDrawingWidth = mWidth - mXCornerGrabBuffer;
     mDrawingHeight = mHeight - mYCornerGrabBuffer;
 }
