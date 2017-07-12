@@ -14,21 +14,31 @@
 
 class Lamp : public QObject, public QGraphicsRectItem
 {
-
+    Q_OBJECT
 public:
-    Lamp(qreal x, qreal y, qreal width, qreal height);
+    Lamp(qreal x, qreal y, qreal width, qreal height, int id);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
+    LampLight *getLampLight();
+    int getLampId() const;
+
+signals:
+    void clickCamera(int);
+
 private:
     QPointF mInitialPos;
     QPointF mInitialCenter;
 
-    int mZindex;
+    int mLampId;
 
     LampLight *mLampLight;
+
+    int mZindex;
+
+
 };
 
 #endif // LAMP_H

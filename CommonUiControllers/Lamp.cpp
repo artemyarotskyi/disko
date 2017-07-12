@@ -28,11 +28,11 @@ void rotateItem(QAbstractGraphicsShapeItem *shape, QPointF center1, QPointF move
     xForm.translate(-center.x(), -center.y());
 
     shape->setTransform(xForm, false);
-
 }
 
-Lamp::Lamp(qreal x, qreal y, qreal width, qreal height):
+Lamp::Lamp(qreal x, qreal y, qreal width, qreal height, int id):
     QGraphicsRectItem(x, y, width, height),
+    mLampId(id),
     mLampLight(new LampLight(this)),
     mZindex(0)
 {
@@ -44,14 +44,15 @@ Lamp::Lamp(qreal x, qreal y, qreal width, qreal height):
 
     this->setFlags(QGraphicsItem::ItemIsSelectable);
 
-    mLampLight->setPos(0,53);
+    mLampLight->setPos(0,53);    
 }
 
 void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
     {
-        this->setZValue(++mZindex);
+        emit clickCamera(mLampId);
+        this->setZValue(++mZindex);        
         if(event->modifiers() == Qt::ShiftModifier)
         {
             mInitialPos = event->scenePos();
@@ -83,4 +84,14 @@ void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             QAbstractGraphicsShapeItem::mouseMoveEvent(event);
         }
     }
+}
+
+LampLight* Lamp::getLampLight()
+{
+    return mLampLight;
+}
+
+int Lamp::getLampId() const
+{
+    return mLampId;
 }

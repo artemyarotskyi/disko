@@ -5,6 +5,12 @@
 #include "CommonUiControllers/LampLight.h"
 #include "CommonUiControllers/Lamp.h"
 #include <QGraphicsScene>
+#include <QColorDialog>
+#include <QColor>
+#include <QPainter>
+#include <QStyleOptionGraphicsItem>
+#include <QBrush>
+#include <QList>
 
 namespace Ui {
     class MainWindow;
@@ -19,13 +25,21 @@ public:
     ~MainWindow();
 
 protected slots:
-    void createCamera();
+    void createCamera();    
+    void setColorForCurrentLampLight(int id);
+    void setCurrentCameraId(int id);
 
-private:
+private:    
     void SubscribeToFormEvents();
 
     Ui::MainWindow *ui;    
     QGraphicsScene *mScene;
+
+    int mCameraId;
+    int mCurrentCameraId;
+
+
+    QList<Lamp*> mLampList;
 
     int mWidth = 601;
     int mHeight = 480;

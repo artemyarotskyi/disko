@@ -7,6 +7,7 @@ LampLight::LampLight(QGraphicsRectItem *parent):
     mOutterBorderPen(),
     mLocation(0, 0),
     mDragStart(0, 0),
+    mColor(Qt::yellow),
     mWidth(42),
     mHeight(40),
     mCornerDragStart(0, 0),
@@ -40,9 +41,14 @@ void LampLight::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidge
     polygon << QPoint(mWidth / 2, mDrawingOriginY)
             << QPoint (mDrawingOriginX + mXCornerGrabBuffer, mDrawingHeight)
             << QPoint(mDrawingWidth, mDrawingHeight);
-    painter->setBrush(Qt::yellow);
+    painter->setBrush(mColor);
     setLightCenterPosition();
     painter->drawPolygon(polygon);
+}
+
+void LampLight::setLampLightColor(QColor color)
+{
+    mColor = color;
 }
 
 void LampLight::hoverEnterEvent(QGraphicsSceneHoverEvent*)

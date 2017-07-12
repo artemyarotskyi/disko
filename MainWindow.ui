@@ -104,6 +104,25 @@
       <height>421</height>
      </rect>
     </property>
+    <widget class="QPushButton" name="btnColor">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>161</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Gadugi</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Choose color</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="widgetRoomProperties" native="true">
     <property name="geometry">

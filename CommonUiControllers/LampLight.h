@@ -17,10 +17,12 @@ class LampLight : public QGraphicsItem
 {
 public:
     LampLight(QGraphicsRectItem *parent = 0);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*);
+
+    void setLampLightColor(QColor color);
 
 private:
-    virtual QRectF boundingRect() const;
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*);
+    virtual QRectF boundingRect() const;    
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent*);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent*);
 
@@ -36,6 +38,8 @@ private:
     QPen mOutterBorderPen;
     QPointF mLocation;
     QPointF mDragStart;
+
+    QColor mColor;
 
     qreal mBoundingRectWidht;
     qreal mBoundingRectHeight;
