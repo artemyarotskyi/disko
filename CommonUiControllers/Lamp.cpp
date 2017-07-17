@@ -1,6 +1,6 @@
 #include "Lamp.h"
 #include <QAbstractGraphicsShapeItem>
-
+#include <QDebug>
 
 void rotateItem(QAbstractGraphicsShapeItem *shape, QPointF center1, QPointF moved, QPointF initial_pos)
 {
@@ -43,8 +43,6 @@ Lamp::Lamp(qreal x, qreal y, qreal width, qreal height, int id):
     mInitialCenter.setY(0.0);
 
     this->setFlags(QGraphicsItem::ItemIsSelectable);
-
-    mLampLight->setPos(0,53);    
 }
 
 void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -81,7 +79,15 @@ void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         }
         else
         {
-            QAbstractGraphicsShapeItem::mouseMoveEvent(event);
+            if((this->x() >= 0) && (this->y() >= 0) &&
+               (this->x() + 53 <= 601) && (this->y() + 53 <= 480))
+            {
+                QAbstractGraphicsShapeItem::mouseMoveEvent(event);
+            }
+            if(this->x() < 0) this->setX(1);
+            if(this->y() < 0) this->setY(1);
+            if(this->x() + 53 > 601) this->setX(601 - 54);
+            if(this->y() + 53 > 480) this->setY(480 - 54);
         }
     }
 }

@@ -33,10 +33,7 @@ QRectF LampLight::boundingRect() const
 
 void LampLight::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
-    QPolygon polygon;    
-
-//    painter->setBrush(Qt::green);
-//    painter->drawRect(0, 0, mWidth, mHeight);
+    QPolygon polygon;
 
     polygon << QPoint(mWidth / 2, mDrawingOriginY)
             << QPoint (mDrawingOriginX + mXCornerGrabBuffer, mDrawingHeight)
@@ -139,20 +136,12 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         {
             newWidth = 28;
         }
-//        if(newWidth > 101)
-//        {
-//            newWidth = 101;
-//        }
 
         int newHeight = mHeight + (YaxisSign * yMoved);
         if(newHeight < 40)
         {
             newHeight = 40;
         }
-//        if(newHeight > 201)
-//        {
-//            newHeight = 201;
-//        }
 
         int deltaWidth = newWidth - mWidth;
         int deltaHeight = newHeight - mHeight;

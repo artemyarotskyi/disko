@@ -5,7 +5,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    mCameraId(0),
+    mCameraId(1),
     mScene(new QGraphicsScene())
 {
     ui->setupUi(this);
@@ -43,19 +43,22 @@ void MainWindow::createCamera()
 
 void MainWindow::setColorForCurrentLampLight(int id)
 {
-    Lamp *lamp;
-    for(int i = 0; i < mLampList.size(); ++i)
+    if(id != 0)
     {
-        if(mLampList.at(i)->getLampId() == id)
+        Lamp *lamp;
+        for(int i = 0; i < mLampList.size(); ++i)
         {
-            lamp = mLampList.at(i);
-            QColor color = QColorDialog::getColor(Qt::white, this, "Choose color");
-            if(color.isValid())
+            if(mLampList.at(i)->getLampId() == id)
             {
-                lamp->getLampLight()->setLampLightColor(color);
-                update();//lamp->getLampLight()->update();
+                lamp = mLampList.at(i);
+                QColor color = QColorDialog::getColor(Qt::white, this, "Choose color");
+                if(color.isValid())
+                {
+                    lamp->getLampLight()->setLampLightColor(color);
+                    update();//lamp->getLampLight()->update();
+                }
+                break;
             }
-            break;
         }
     }
 }
