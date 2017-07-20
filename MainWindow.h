@@ -38,11 +38,11 @@ private:
     int mCameraId;
     int mCurrentCameraId;
 
-
     QList<Lamp*> mLampList;
 
     int mWidth = 601;
     int mHeight = 480;
+    std::string str ="23423";
 };
 
 #endif // MAINWINDOW_H

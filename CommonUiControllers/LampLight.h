@@ -17,18 +17,18 @@ class LampLight : public QGraphicsItem
 {
 public:
     LampLight(QGraphicsRectItem *parent = 0);
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*) override;
 
     void setLampLightColor(QColor color);
 
 private:
-    virtual QRectF boundingRect() const;    
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent*);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent*);
+    QRectF boundingRect() const override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent*) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent*) override;
 
     virtual void mouseMoveEvent(QGraphicsSceneDragDropEvent *event);
     virtual void mousePressEvent(QGraphicsSceneDragDropEvent *event);
-    virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
+    bool sceneEventFilter(QGraphicsItem *watched, QEvent *event) override;
 
     void setCornerPosition();
     void setLightCenterPosition();

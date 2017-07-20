@@ -29,7 +29,7 @@ void MainWindow::createCamera()
     lamp->setBrush(Qt::black);
     mScene->addItem(lamp);
 
-    mLampList.append(lamp);
+    mLampList.append(lamp);     // redo on simple list from stl
 
     connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
 
@@ -55,7 +55,7 @@ void MainWindow::setColorForCurrentLampLight(int id)
                 if(color.isValid())
                 {
                     lamp->getLampLight()->setLampLightColor(color);
-                    update();//lamp->getLampLight()->update();
+                    update();   //lamp->getLampLight()->update();
                 }
                 break;
             }

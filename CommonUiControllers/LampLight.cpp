@@ -161,7 +161,6 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
     }
 
     return true;
-
 }
 
 void LampLight::setCornerPosition()

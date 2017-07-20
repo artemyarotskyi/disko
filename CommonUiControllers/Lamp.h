@@ -18,9 +18,9 @@ class Lamp : public QObject, public QGraphicsRectItem
 public:
     Lamp(qreal x, qreal y, qreal width, qreal height, int id);
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
     LampLight *getLampLight();
     int getLampId() const;
@@ -37,8 +37,6 @@ private:
     LampLight *mLampLight;
 
     int mZindex;
-
-
 };
 
 #endif // LAMP_H
