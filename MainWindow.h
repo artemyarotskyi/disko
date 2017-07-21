@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "CommonUiControllers/LampLight.h"
 #include "CommonUiControllers/Lamp.h"
+#include "Repositories/OperationRepository.h"
 #include <QGraphicsScene>
 #include <QColorDialog>
 #include <QColor>
@@ -42,7 +43,10 @@ private:
 
     int mWidth = 601;
     int mHeight = 480;
-    std::string str ="23423";
+
+    const QString mPath = "C:/sqlite/disko.db";
+
+    OperationRepository* repository;
 };
 
 #endif // MAINWINDOW_H

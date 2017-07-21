@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,11 +16,13 @@ SOURCES += main.cpp\
         MainWindow.cpp \
     CommonUiControllers/LampLight.cpp \
     CommonUiControllers/CornerGrabber.cpp \
-    CommonUiControllers/Lamp.cpp
+    CommonUiControllers/Lamp.cpp \
+    Repositories/OperationRepository.cpp
 
 HEADERS  += MainWindow.h \
     CommonUiControllers/LampLight.h \
     CommonUiControllers/CornerGrabber.h \
-    CommonUiControllers/Lamp.h
+    CommonUiControllers/Lamp.h \
+    Repositories/OperationRepository.h
 
 FORMS    += MainWindow.ui

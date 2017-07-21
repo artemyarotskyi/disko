@@ -6,7 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mCameraId(1),
-    mScene(new QGraphicsScene())
+    mScene(new QGraphicsScene()),
+    repository(new OperationRepository(mPath ,this))
 {
     ui->setupUi(this);
     ui->graphicsViewCurrentRoom->setScene(mScene);
