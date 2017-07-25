@@ -31,14 +31,21 @@ protected slots:
     void setColorForCurrentLampLight(int id);
     void setCurrentCameraId(int id);
 
+    void saveRoom();
+    void loadRoom(int id);
+
+ private:
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
-private:    
     void SubscribeToFormEvents();
 
     Ui::MainWindow *ui;    
     QGraphicsScene *mScene;
+    QString mSceneName = "Room 1";
+    int mSceneId;
+
+    QJsonObject mRoomObject;
 
     int mCameraId;
     int mCurrentCameraId;
@@ -50,7 +57,7 @@ private:
 
     const QString mPath = "C:/sqlite/disko.db";
 
-    OperationRepository* repository;
+    OperationRepository* mRepository;
 };
 
 #endif // MAINWINDOW_H

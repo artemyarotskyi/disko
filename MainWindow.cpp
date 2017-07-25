@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     mCameraId(1),
     mScene(new QGraphicsScene()),
-    repository(new OperationRepository(mPath ,this))
+    mRepository(new OperationRepository(mPath ,this))
 {
     ui->setupUi(this);
     ui->graphicsViewCurrentRoom->setScene(mScene);
@@ -70,31 +70,48 @@ void MainWindow::setCurrentCameraId(int id)
     mCurrentCameraId = id;
 }
 
+void MainWindow::saveRoom()
+{
+    write(mRoomObject);
+    mRepository->SaveRoom(mRoomObject);
+}
+
+void MainWindow::loadRoom(int id)
+{
+
+}
+
 void MainWindow::read(const QJsonObject &json)
 {
     mLampList.clear();
-    QJsonArray lampArray = json["lamp"].toArray();
+
+    mSceneName = json["roomName"].toString();
+    mSceneId = json["roomId"].toInt();
+
+    QJsonArray lampArray = json["lamps"].toArray();
     for(int lampIndex = 0; lampIndex < lampArray.size(); ++lampIndex)
     {
         QJsonObject lampObject = lampArray[lampIndex].toObject();
-        Lamp *lamp;
-        lamp->read(lampObject);
-        mLampList.append(lamp);
+        Lamp lamp;
+        lamp.read(lampObject);
+        mLampList.append(&lamp);
     }
 }
 
 void MainWindow::write(QJsonObject &json) const
 {
+    json["roomName"] = mSceneName;
     QJsonArray lampArray;
     foreach (const Lamp *lamp, mLampList) {
         QJsonObject lampObject;
         lamp->write(lampObject);
         lampArray.append(lampObject);
-    }
-    json["lamp"] = lampArray;
+    }    
+    json["lamps"] = lampArray;
 }
 
 void MainWindow::SubscribeToFormEvents()
 {
-    connect(ui->btnAddLamp, SIGNAL(clicked()), this, SLOT(createCamera()));    
+    connect(ui->btnAddLamp, SIGNAL(clicked()), this, SLOT(createCamera()));
+    connect(ui->btnSaveRoom, SIGNAL(clicked()), this, SLOT(saveRoom()));
 }

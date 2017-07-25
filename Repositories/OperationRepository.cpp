@@ -1,4 +1,6 @@
 #include "OperationRepository.h"
+#include <QJsonDocument>
+#include <QVariantMap>
 
 OperationRepository::OperationRepository(const QString &path, QObject *parent) : QObject(parent)
 {
@@ -11,29 +13,29 @@ OperationRepository::OperationRepository(const QString &path, QObject *parent) :
         qDebug() << "Database: connection ok";
 }
 
-void OperationRepository::SaveRoom(QJsonObject *room)
+void OperationRepository::SaveRoom(QJsonObject &room)
 {
-    QString roomName;
-    QString roomContent;
+    QJsonDocument doc(room);
+    QString roomContent(doc.toJson(QJsonDocument::Compact));
 
     QSqlQuery query;
     query.prepare(mSaveRoom);
-    query.bindValue(":roomName", roomName);
-    query.bindValue(":roomContent", roomContent);
+    query.bindValue(":roomName", room["roomName"].toString());
+    query.bindValue(":roomContent",roomContent);
+
     if(!query.exec())
         qDebug() << "Save room error:" << query.lastError();
 }
 
-void OperationRepository::UpdateRoom(QJsonObject *room)
+void OperationRepository::UpdateRoom(QJsonObject &room)
 {
-    QString roomName;
-    QString roomContent;
+    QString roomName;    
     int id;
 
     QSqlQuery query;
     query.prepare(mSaveRoom);
     query.bindValue(":roomName", roomName);
-    query.bindValue(":roomContent", roomContent);
+    query.bindValue(":roomContent", room["lamps"].toString());
     query.bindValue(":id", id);
     if(!query.exec())
         qDebug() << "Update room error:" << query.lastError();
@@ -48,7 +50,7 @@ void OperationRepository::DeleteRoom(int id)
         qDebug() << "Delete room error:" << query.lastError();
 }
 
-QJsonObject* OperationRepository::GetAllRooms()
+QJsonObject OperationRepository::GetAllRooms()
 {
     QSqlQuery query;
     if(!query.exec(mGetAllRooms))
@@ -65,11 +67,11 @@ QJsonObject* OperationRepository::GetAllRooms()
             ///
         }
 
-        return &mResult;
+        return mResult;
     }
 }
 
-QJsonObject* OperationRepository::GetCurrentRoom(int id)
+QJsonObject OperationRepository::GetCurrentRoom(int id)
 {
     QSqlQuery query;
     query.prepare(mGetRoomById);
@@ -82,6 +84,6 @@ QJsonObject* OperationRepository::GetCurrentRoom(int id)
         //QJsonObject roomName = query.value(1).toJsonObject();
         mResult = query.value(2).toJsonObject();
 
-        return &mResult;
+        return mResult;
     }
 }

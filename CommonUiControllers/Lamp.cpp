@@ -53,6 +53,11 @@ Lamp::Lamp(qreal x, qreal y, qreal width, qreal height, int id):
     this->setFlags(QGraphicsItem::ItemIsSelectable);
 }
 
+Lamp::Lamp() : mLampLight(new LampLight(this)), mZindex(0)
+{
+
+}
+
 void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
@@ -91,6 +96,8 @@ void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
                (this->x() + 53 <= 601) && (this->y() + 53 <= 480))
             {
                 QAbstractGraphicsShapeItem::mouseMoveEvent(event);
+                mX = this->x();
+                mY = this->y();
             }
             if(this->x() < 0) this->setX(1);
             if(this->y() < 0) this->setY(1);
@@ -148,7 +155,7 @@ void Lamp::read(const QJsonObject &json)
     mWidth =    json["width"].toDouble();
     mHeight =   json["height"].toDouble();
     mAngle=     json["angle"].toDouble();
-    mLampLight->setLampLightColor(json["color"].toString());
+    //mLampLight->setLampLightColor(json["color"].toString());
     mLampLight->setLightWidth(json["lightWidth"].toDouble());
     mLampLight->setLightHeight(json["lightHeight"].toDouble());
 }
@@ -161,7 +168,7 @@ void Lamp::write(QJsonObject &json) const
     json["width"] =         mWidth;
     json["height"] =        mHeight;
     json["angle"] =         mAngle;
-    json["color"] =         mLampLight->lightColor();
+    //json["color"] =         mLampLight->lightColor();
     json["lightWidth"] =    mLampLight->lightWidth();
     json["lightHeight"] =   mLampLight->lightHeight();
 }
