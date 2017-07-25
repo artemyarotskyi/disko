@@ -12,6 +12,7 @@
 #include <QStyleOptionGraphicsItem>
 #include <QBrush>
 #include <QList>
+#include <QJsonObject>
 
 namespace Ui {
     class MainWindow;
@@ -29,6 +30,9 @@ protected slots:
     void createCamera();    
     void setColorForCurrentLampLight(int id);
     void setCurrentCameraId(int id);
+
+    void read(const QJsonObject &json);
+    void write(QJsonObject &json) const;
 
 private:    
     void SubscribeToFormEvents();

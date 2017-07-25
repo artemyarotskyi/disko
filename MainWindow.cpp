@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include <QDebug>
+#include <QJsonArray>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -30,7 +31,7 @@ void MainWindow::createCamera()
     lamp->setBrush(Qt::black);
     mScene->addItem(lamp);
 
-    mLampList.append(lamp);     // redo on simple list from stl
+    mLampList.append(lamp);
 
     connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
 
@@ -49,14 +50,14 @@ void MainWindow::setColorForCurrentLampLight(int id)
         Lamp *lamp;
         for(int i = 0; i < mLampList.size(); ++i)
         {
-            if(mLampList.at(i)->getLampId() == id)
+            if(mLampList.at(i)->lampId() == id)
             {
                 lamp = mLampList.at(i);
                 QColor color = QColorDialog::getColor(Qt::white, this, "Choose color");
                 if(color.isValid())
                 {
-                    lamp->getLampLight()->setLampLightColor(color);
-                    update();   //lamp->getLampLight()->update();
+                    lamp->lampLight()->setLampLightColor(color);
+                    update();
                 }
                 break;
             }
@@ -67,6 +68,30 @@ void MainWindow::setColorForCurrentLampLight(int id)
 void MainWindow::setCurrentCameraId(int id)
 {
     mCurrentCameraId = id;
+}
+
+void MainWindow::read(const QJsonObject &json)
+{
+    mLampList.clear();
+    QJsonArray lampArray = json["lamp"].toArray();
+    for(int lampIndex = 0; lampIndex < lampArray.size(); ++lampIndex)
+    {
+        QJsonObject lampObject = lampArray[lampIndex].toObject();
+        Lamp *lamp;
+        lamp->read(lampObject);
+        mLampList.append(lamp);
+    }
+}
+
+void MainWindow::write(QJsonObject &json) const
+{
+    QJsonArray lampArray;
+    foreach (const Lamp *lamp, mLampList) {
+        QJsonObject lampObject;
+        lamp->write(lampObject);
+        lampArray.append(lampObject);
+    }
+    json["lamp"] = lampArray;
 }
 
 void MainWindow::SubscribeToFormEvents()

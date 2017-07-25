@@ -19,6 +19,13 @@ public:
     LampLight(QGraphicsRectItem *parent = 0);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*) override;
 
+    qreal lightWidth() const;
+    void setLightWidth(qreal width);
+
+    qreal lightHeight() const;
+    void setLightHeight(qreal height);
+
+    QColor lightColor() const;
     void setLampLightColor(QColor color);
 
 private:

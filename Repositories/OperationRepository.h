@@ -7,7 +7,7 @@
 #include <QtDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QFileInfo>
+#include <QSqlError>
 
 class OperationRepository : public QObject
 {
@@ -27,11 +27,9 @@ private:
 
     const QString mSaveRoom = "INSERT INTO room (roomName, roomContent) VALUES (:roomName, :roomContent)";
     const QString mUpdateRoom = "UPDATE room SET roomName = (:roomName), roomContent = (:roomContent) WHERE id = (:id)";
-    const QString mGetAllRooms = "SELECT id, roomName FROM room";
-
     const QString mDeleteRoomById = "DELETE FROM room WHERE id = (:id)";
+    const QString mGetAllRooms = "SELECT id, roomName FROM room";
     const QString mGetRoomById = "SELECT id, roomName, roomContent FROM room WHERE id = (:id)";
-
 };
 
 #endif // OPERATIONREPOSITORY_H

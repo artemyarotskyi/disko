@@ -1,10 +1,11 @@
 #include "Lamp.h"
 #include <QAbstractGraphicsShapeItem>
 #include <QDebug>
+#include <QColor>
 
-void rotateItem(QAbstractGraphicsShapeItem *shape, QPointF center1, QPointF moved, QPointF initial_pos)
+void rotateItem(Lamp *lamp, QPointF center1, QPointF moved, QPointF initial_pos)
 {
-    QRectF bbox = shape->boundingRect().normalized();
+    QRectF bbox = lamp->boundingRect().normalized();
     QPointF center = bbox.center();
 
     qreal init_x = initial_pos.x() - center1.x();
@@ -20,19 +21,26 @@ void rotateItem(QAbstractGraphicsShapeItem *shape, QPointF center1, QPointF move
     if(std::fabs(angle) > 360.0)
     {
         angle = 0.0;
-    }
+    }    
+
+    lamp->SetLampAngle(angle);
 
     QTransform xForm;
     xForm.translate(center.x(), center.y());
     xForm.rotate(angle);
     xForm.translate(-center.x(), -center.y());
 
-    shape->setTransform(xForm, false);
+    lamp->setTransform(xForm, false);
 }
 
 Lamp::Lamp(qreal x, qreal y, qreal width, qreal height, int id):
     QGraphicsRectItem(x, y, width, height),
     mLampId(id),
+    mX(x),
+    mY(y),
+    mWidth(width),
+    mHeight(height),
+    mAngle(0),
     mLampLight(new LampLight(this)),
     mZindex(0)
 {
@@ -92,12 +100,68 @@ void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-LampLight* Lamp::getLampLight()
+qreal Lamp::lampXCoordinate() const
+{
+    return mX;
+}
+
+qreal Lamp::lampYCoordinate() const
+{
+    return mY;
+}
+
+qreal Lamp::lampWidth() const
+{
+    return mWidth;
+}
+
+qreal Lamp::lampHeight() const
+{
+    return mHeight;
+}
+
+qreal Lamp::lampAngle() const
+{
+    return mAngle;
+}
+
+void Lamp::SetLampAngle(qreal angle)
+{
+    mAngle = angle;
+}
+
+LampLight* Lamp::lampLight()
 {
     return mLampLight;
 }
 
-int Lamp::getLampId() const
+int Lamp::lampId() const
 {
     return mLampId;
+}
+
+void Lamp::read(const QJsonObject &json)
+{
+    mLampId =   json["lampId"].toInt();
+    mX =        json["x"].toDouble();
+    mY =        json["y"].toDouble();
+    mWidth =    json["width"].toDouble();
+    mHeight =   json["height"].toDouble();
+    mAngle=     json["angle"].toDouble();
+    mLampLight->setLampLightColor(json["color"].toString());
+    mLampLight->setLightWidth(json["lightWidth"].toDouble());
+    mLampLight->setLightHeight(json["lightHeight"].toDouble());
+}
+
+void Lamp::write(QJsonObject &json) const
+{
+    json["lampId"] =        mLampId;
+    json["x"] =             mX;
+    json["y"] =             mY;
+    json["width"] =         mWidth;
+    json["height"] =        mHeight;
+    json["angle"] =         mAngle;
+    json["color"] =         mLampLight->lightColor();
+    json["lightWidth"] =    mLampLight->lightWidth();
+    json["lightHeight"] =   mLampLight->lightHeight();
 }

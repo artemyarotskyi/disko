@@ -57,6 +57,7 @@ QJsonObject* OperationRepository::GetAllRooms()
     {
         while (query.next())
         {
+            // to json array
             QString id = query.value(0).toString(); // can to json object
             QString roomName = query.value(1).toString();
             ///

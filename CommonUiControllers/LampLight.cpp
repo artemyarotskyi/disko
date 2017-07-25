@@ -43,6 +43,31 @@ void LampLight::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidge
     painter->drawPolygon(polygon);
 }
 
+qreal LampLight::lightWidth() const
+{
+    return mDrawingWidth;
+}
+
+void LampLight::setLightWidth(qreal width)
+{
+    mDrawingWidth = width;
+}
+
+qreal LampLight::lightHeight() const
+{
+    return mDrawingHeight;
+}
+
+void LampLight::setLightHeight(qreal height)
+{
+    mDrawingHeight = height;
+}
+
+QColor LampLight::lightColor() const
+{
+    return mColor;
+}
+
 void LampLight::setLampLightColor(QColor color)
 {
     mColor = color;
