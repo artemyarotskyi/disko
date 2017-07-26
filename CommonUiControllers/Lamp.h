@@ -36,6 +36,15 @@ public:
     LampLight* lampLight();
     int lampId() const;
 
+    void setLampLightWidth(qreal width);
+    qreal lampLightWidth() const;
+
+    void setLampLightHeight(qreal height);
+    qreal lampLightHeight() const;
+
+    void setLampLightColor(QColor color);
+    QColor lampLightColor() const;
+
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 

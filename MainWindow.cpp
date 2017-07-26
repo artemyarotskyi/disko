@@ -31,10 +31,10 @@ void MainWindow::createCamera()
 {
     Lamp *lamp = new Lamp(0, 0, 53, 53, mCameraId);
     lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-    lamp->setBrush(Qt::black);
-    mScene->addItem(lamp);
-
+    lamp->setBrush(Qt::black);    
     mLampList.append(lamp);
+
+    mScene->addItem(lamp);    
 
     connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
 
@@ -89,7 +89,19 @@ void MainWindow::loadRoom(int row, int)
 
 void MainWindow::paintLamps()
 {
+    foreach (Lamp *lmp, mLampList)
+    {
+        Lamp *lamp = new Lamp(lmp->lampXCoordinate(), lmp->lampYCoordinate(), lmp->lampWidth(), lmp->lampHeight(), lmp->lampId());
+        lamp->SetLampAngle(lmp->lampAngle());
+//        lamp->setLampLightWidth(lmp->lampLightWidth());
+//        lamp->setLampLightHeight(lmp->lampLightHeight());
+        //lamp->setLampLightColor(lmp->lampLightColor());
 
+        lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
+        lamp->setBrush(Qt::black);
+
+        mScene->addItem(lamp);
+    }
 }
 
 void MainWindow::loadRoomList(const QJsonObject &json)

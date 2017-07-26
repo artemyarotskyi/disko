@@ -147,6 +147,36 @@ int Lamp::lampId() const
     return mLampId;
 }
 
+void Lamp::setLampLightWidth(qreal width)
+{
+    mLampLight->setLightWidth(width);
+}
+
+qreal Lamp::lampLightWidth() const
+{
+    return mLampLight->lightWidth();
+}
+
+void Lamp::setLampLightHeight(qreal height)
+{
+    mLampLight->setLightHeight(height);
+}
+
+qreal Lamp::lampLightHeight() const
+{
+    return mLampLight->lightHeight();
+}
+
+void Lamp::setLampLightColor(QColor color)
+{
+
+}
+
+QColor Lamp::lampLightColor() const
+{
+    return mLampLight->lightColor();
+}
+
 void Lamp::read(const QJsonObject &json)
 {
     mLampId =   json["lampId"].toInt();

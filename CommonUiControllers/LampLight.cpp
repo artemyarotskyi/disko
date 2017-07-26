@@ -45,7 +45,7 @@ void LampLight::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidge
 
 qreal LampLight::lightWidth() const
 {
-    return mDrawingWidth;
+    return mDrawingWidth;   
 }
 
 void LampLight::setLightWidth(qreal width)

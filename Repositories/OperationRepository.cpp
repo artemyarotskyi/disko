@@ -87,15 +87,11 @@ QJsonObject OperationRepository::GetCurrentRoom(int id)
 
         while(query.next())
         {
-            //qDebug() << "1: " << query.value(2).toString();
-
             resultObject["id"] = query.value(0).toString();
             resultObject["roomName"] = query.value(1).toString();
 
-            QJsonObject currentRoomObject;
             QJsonDocument doc = QJsonDocument::fromJson(query.value(2).toByteArray());
-            currentRoomObject = doc.object();
-
+            QJsonObject currentRoomObject = doc.object();
             QJsonArray lampsArray = currentRoomObject["lamps"].toArray();
 
             resultObject["lamps"] = lampsArray;
