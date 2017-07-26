@@ -2,6 +2,7 @@
 #include <QJsonDocument>
 #include <QVariantMap>
 #include <QJsonArray>
+#include <QJsonValue>
 
 OperationRepository::OperationRepository(const QString &path, QObject *parent) : QObject(parent)
 {
@@ -66,25 +67,40 @@ QJsonObject OperationRepository::GetAllRooms()
             currentRoomObject["roomName"] = query.value(1).toString();
             roomArray.append(currentRoomObject);
         }
-        mResult["rooms"] = roomArray;
+        QJsonObject resultObject;
+        resultObject["rooms"] = roomArray;
 
-        return mResult;
+        return resultObject;
     }
 }
 
 QJsonObject OperationRepository::GetCurrentRoom(int id)
-{
+{    
     QSqlQuery query;
-    query.prepare(mGetRoomById);
+    query.prepare(mGetRoomById);    
     query.bindValue(":id", id);
     if(!query.exec())
         qDebug() << "Get room by id error:" << query.lastError();
     else
     {
-        //QJsonObject id = query.value(0).toJsonObject();
-        //QJsonObject roomName = query.value(1).toJsonObject();
-        mResult = query.value(2).toJsonObject();
+        QJsonObject resultObject;
 
-        return mResult;
+        while(query.next())
+        {
+            //qDebug() << "1: " << query.value(2).toString();
+
+            resultObject["id"] = query.value(0).toString();
+            resultObject["roomName"] = query.value(1).toString();
+
+            QJsonObject currentRoomObject;
+            QJsonDocument doc = QJsonDocument::fromJson(query.value(2).toByteArray());
+            currentRoomObject = doc.object();
+
+            QJsonArray lampsArray = currentRoomObject["lamps"].toArray();
+
+            resultObject["lamps"] = lampsArray;
+        }
+
+        return resultObject;
     }
 }

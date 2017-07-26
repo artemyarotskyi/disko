@@ -75,14 +75,21 @@ void MainWindow::setCurrentCameraId(int id)
 
 void MainWindow::saveRoom()
 {
-    write(mRoomObject);
-    mRepository->SaveRoom(mRoomObject);
+    QJsonObject roomObject;
+    write(roomObject);
+    mRepository->SaveRoom(roomObject);
 }
 
 void MainWindow::loadRoom(int row, int)
 {
     int id = ui->tblViewRooms->item(row,1)->text().toInt();
-    mRepository->GetCurrentRoom(id);
+    read(mRepository->GetCurrentRoom(id));
+    paintLamps();
+}
+
+void MainWindow::paintLamps()
+{
+
 }
 
 void MainWindow::loadRoomList(const QJsonObject &json)

@@ -35,6 +35,7 @@ protected slots:
     void loadRoom(int row, int);
 
  private:
+    void paintLamps();
     void loadRoomList(const QJsonObject &json);
 
     void read(const QJsonObject &json);
@@ -47,8 +48,6 @@ protected slots:
     QGraphicsScene *mScene;
     QString mSceneName = "Room 1";
     int mSceneId;
-
-    QJsonObject mRoomObject;
 
     int mCameraId;
     int mCurrentCameraId;
