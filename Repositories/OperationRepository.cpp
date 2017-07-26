@@ -1,6 +1,7 @@
 #include "OperationRepository.h"
 #include <QJsonDocument>
 #include <QVariantMap>
+#include <QJsonArray>
 
 OperationRepository::OperationRepository(const QString &path, QObject *parent) : QObject(parent)
 {
@@ -56,16 +57,16 @@ QJsonObject OperationRepository::GetAllRooms()
     if(!query.exec(mGetAllRooms))
         qDebug() << "Get all rooms error:" << query.lastError();
     else
-    {
+    {        
+        QJsonArray roomArray;
         while (query.next())
         {
-            // to json array
-            QString id = query.value(0).toString(); // can to json object
-            QString roomName = query.value(1).toString();
-            ///
-            // fill jsonobject
-            ///
+            QJsonObject currentRoomObject;
+            currentRoomObject["id"]= query.value(0).toString();
+            currentRoomObject["roomName"] = query.value(1).toString();
+            roomArray.append(currentRoomObject);
         }
+        mResult["rooms"] = roomArray;
 
         return mResult;
     }

@@ -2,6 +2,8 @@
 #include "ui_MainWindow.h"
 #include <QDebug>
 #include <QJsonArray>
+#include <QJsonValue>
+#include <QTableWidgetItem>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,11 +13,12 @@ MainWindow::MainWindow(QWidget *parent) :
     mRepository(new OperationRepository(mPath ,this))
 {
     ui->setupUi(this);
-    ui->graphicsViewCurrentRoom->setScene(mScene);
+    ui->graphicsViewCurrentRoom->setScene(mScene);    
 
-    connect(ui->btnColor, &QPushButton::clicked, this, [=]{setColorForCurrentLampLight(mCurrentCameraId);});
-
+    SetRoomsListTableWidgetOptions();
     SubscribeToFormEvents();
+
+    loadRoomList(mRepository->GetAllRooms());
 }
 
 MainWindow::~MainWindow()
@@ -76,9 +79,23 @@ void MainWindow::saveRoom()
     mRepository->SaveRoom(mRoomObject);
 }
 
-void MainWindow::loadRoom(int id)
+void MainWindow::loadRoom(int row, int)
 {
+    int id = ui->tblViewRooms->item(row,1)->text().toInt();
+    mRepository->GetCurrentRoom(id);
+}
 
+void MainWindow::loadRoomList(const QJsonObject &json)
+{
+    QJsonArray roomArray = json["rooms"].toArray();
+    for(int roomIndex = 0;  roomIndex < roomArray.size(); ++roomIndex)
+    {
+        QJsonObject subtree = roomArray.at(roomIndex).toObject();
+
+        ui->tblViewRooms->insertRow(ui->tblViewRooms->rowCount());
+        ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 0, new QTableWidgetItem(subtree.value("roomName").toString()));
+        ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 1, new QTableWidgetItem(subtree.value("id").toString()));
+    }
 }
 
 void MainWindow::read(const QJsonObject &json)
@@ -89,10 +106,11 @@ void MainWindow::read(const QJsonObject &json)
     mSceneId = json["roomId"].toInt();
 
     QJsonArray lampArray = json["lamps"].toArray();
+
     for(int lampIndex = 0; lampIndex < lampArray.size(); ++lampIndex)
     {
         QJsonObject lampObject = lampArray[lampIndex].toObject();
-        Lamp lamp;
+        Lamp lamp;        
         lamp.read(lampObject);
         mLampList.append(&lamp);
     }
@@ -100,18 +118,35 @@ void MainWindow::read(const QJsonObject &json)
 
 void MainWindow::write(QJsonObject &json) const
 {
-    json["roomName"] = mSceneName;
     QJsonArray lampArray;
-    foreach (const Lamp *lamp, mLampList) {
+
+    foreach (const Lamp *lamp, mLampList)
+    {
         QJsonObject lampObject;
         lamp->write(lampObject);
         lampArray.append(lampObject);
-    }    
+    }
+
+    json["roomName"] = mSceneName;
     json["lamps"] = lampArray;
 }
 
 void MainWindow::SubscribeToFormEvents()
 {
     connect(ui->btnAddLamp, SIGNAL(clicked()), this, SLOT(createCamera()));
+
     connect(ui->btnSaveRoom, SIGNAL(clicked()), this, SLOT(saveRoom()));
+    connect(ui->tblViewRooms, SIGNAL(cellClicked(int,int)), this, SLOT(loadRoom(int,int)));
+
+    connect(ui->btnColor, &QPushButton::clicked, this, [=]{setColorForCurrentLampLight(mCurrentCameraId);});
+}
+
+void MainWindow::SetRoomsListTableWidgetOptions()
+{   
+    ui->tblViewRooms->setColumnCount(2);    
+    ui->tblViewRooms->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    ui->tblViewRooms->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    ui->tblViewRooms->setColumnWidth(0,181);
+    ui->tblViewRooms->setColumnHidden(1, true);
 }

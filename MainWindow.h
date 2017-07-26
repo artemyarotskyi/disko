@@ -32,13 +32,16 @@ protected slots:
     void setCurrentCameraId(int id);
 
     void saveRoom();
-    void loadRoom(int id);
+    void loadRoom(int row, int);
 
  private:
+    void loadRoomList(const QJsonObject &json);
+
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
     void SubscribeToFormEvents();
+    void SetRoomsListTableWidgetOptions();
 
     Ui::MainWindow *ui;    
     QGraphicsScene *mScene;
