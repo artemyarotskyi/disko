@@ -35,7 +35,6 @@ protected slots:
     void loadRoom(int row, int);
 
  private:
-    void paintLamps();
     void loadRoomList(const QJsonObject &json);
 
     void read(const QJsonObject &json);
