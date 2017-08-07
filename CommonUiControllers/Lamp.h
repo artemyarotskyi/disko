@@ -42,7 +42,6 @@ public:
     void setLampLightHeight(qreal height);
     qreal lampLightHeight() const;
 
-    void setLampLightColor(QColor color);
     QColor lampLightColor() const;
 
     void read(const QJsonObject &json);

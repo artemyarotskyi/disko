@@ -167,11 +167,6 @@ qreal Lamp::lampLightHeight() const
     return mLampLight->lightHeight();
 }
 
-void Lamp::setLampLightColor(QColor color)
-{
-
-}
-
 QColor Lamp::lampLightColor() const
 {
     return mLampLight->lightColor();
@@ -185,7 +180,8 @@ void Lamp::read(const QJsonObject &json)
     mWidth =    json["width"].toDouble();
     mHeight =   json["height"].toDouble();
     mAngle=     json["angle"].toDouble();
-    //mLampLight->setLampLightColor(json["color"].toString());
+    const QColor color(json["color"].toString());
+    mLampLight->setLampLightColor(color);
     mLampLight->setLightWidth(json["lightWidth"].toDouble());
     mLampLight->setLightHeight(json["lightHeight"].toDouble());
 }
@@ -198,7 +194,7 @@ void Lamp::write(QJsonObject &json) const
     json["width"] =         mWidth;
     json["height"] =        mHeight;
     json["angle"] =         mAngle;
-    //json["color"] =         mLampLight->lightColor();
+    json["color"] =         mLampLight->lightColor().name();
     json["lightWidth"] =    mLampLight->lightWidth();
     json["lightHeight"] =   mLampLight->lightHeight();
 }

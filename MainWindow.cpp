@@ -111,14 +111,14 @@ void MainWindow::read(const QJsonObject &json)
     for(int lampIndex = 0; lampIndex < lampArray.size(); ++lampIndex)
     {
         QJsonObject lampObject = lampArray[lampIndex].toObject();
-        Lamp lmp;
+        Lamp lmp;                              // pointer delets and information damages
         lmp.read(lampObject);
 
         Lamp *lamp = new Lamp(lmp.lampXCoordinate(), lmp.lampYCoordinate(), lmp.lampWidth(), lmp.lampHeight(), lmp.lampId());
         lamp->SetLampAngle(lmp.lampAngle());
 //        lamp->setLampLightWidth(lmp.lampLightWidth());
 //        lamp->setLampLightHeight(lmp.lampLightHeight());
-//        lamp->setLampLightColor(lmp.lampLightColor());
+        lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
 
         lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
         lamp->setBrush(Qt::black);
