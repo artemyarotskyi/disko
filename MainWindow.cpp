@@ -128,9 +128,14 @@ void MainWindow::read(const QJsonObject &json)
         lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
         lamp->setBrush(Qt::black);
 
+        mCurrentCameraId = lmp.lampId();
+
         mLampList.append(lamp);
         mScene->addItem(lamp);
     }
+    ui->graphicsViewCurrentRoom->setFixedSize(mWidth, mHeight);
+    ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
+    ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
 }
 
 void MainWindow::write(QJsonObject &json) const
