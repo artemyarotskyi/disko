@@ -121,14 +121,15 @@ void MainWindow::read(const QJsonObject &json)
         lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
         lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
         lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
-        lamp->SetLampAngle(lmp.lampAngle());
+        lamp->SetLampAngle(lmp.lampAngle()); // set angle and do transform
 //        lamp->setLampLightWidth(lmp.lampLightWidth());
 //        lamp->setLampLightHeight(lmp.lampLightHeight());
 
         lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
         lamp->setBrush(Qt::black);
 
-        mCurrentCameraId = lmp.lampId();
+        connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
+        mCameraId = mCurrentCameraId + 1;
 
         mLampList.append(lamp);
         mScene->addItem(lamp);
