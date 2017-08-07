@@ -78,6 +78,7 @@ void MainWindow::saveRoom()
     QJsonObject roomObject;
     write(roomObject);
     mRepository->SaveRoom(roomObject);
+    loadRoomList(mRepository->GetAllRooms());
 }
 
 void MainWindow::loadRoom(int row, int)
@@ -88,6 +89,8 @@ void MainWindow::loadRoom(int row, int)
 
 void MainWindow::loadRoomList(const QJsonObject &json)
 {
+    ui->tblViewRooms->clearContents();
+    ui->tblViewRooms->setRowCount(0);
     QJsonArray roomArray = json["rooms"].toArray();
     for(int roomIndex = 0;  roomIndex < roomArray.size(); ++roomIndex)
     {
@@ -111,14 +114,16 @@ void MainWindow::read(const QJsonObject &json)
     for(int lampIndex = 0; lampIndex < lampArray.size(); ++lampIndex)
     {
         QJsonObject lampObject = lampArray[lampIndex].toObject();
-        Lamp lmp;                              // pointer delets and information damages
+        Lamp lmp;
         lmp.read(lampObject);
 
         Lamp *lamp = new Lamp(lmp.lampXCoordinate(), lmp.lampYCoordinate(), lmp.lampWidth(), lmp.lampHeight(), lmp.lampId());
+        lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
+        lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
+        lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
         lamp->SetLampAngle(lmp.lampAngle());
 //        lamp->setLampLightWidth(lmp.lampLightWidth());
 //        lamp->setLampLightHeight(lmp.lampLightHeight());
-        lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
 
         lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
         lamp->setBrush(Qt::black);
