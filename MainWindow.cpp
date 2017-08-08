@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     SetRoomsListTableWidgetOptions();
     SubscribeToFormEvents();
 
+ //   mScene->setSceneRect(0,0,597,477);
+
     loadRoomList(mRepository->GetAllRooms());
 }
 
@@ -29,21 +31,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::createCamera()
 {
+    ui->graphicsViewCurrentRoom->setFixedSize(mWidth, mHeight);
+    ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
+    ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
+    //    //mScene->setSceneRect(0,0,597,477);
+
     Lamp *lamp = new Lamp(0, 0, 53, 53, mCameraId);
     lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-    lamp->setBrush(Qt::black);    
+    lamp->setBrush(Qt::black);
     mLampList.append(lamp);
 
-    mScene->addItem(lamp);    
+    mScene->addItem(lamp);
 
     connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
 
     mCameraId++;
-
-    ui->graphicsViewCurrentRoom->setFixedSize(mWidth, mHeight);
-    ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
-    ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
-    //mScene->setSceneRect(0,0,597,477);
 }
 
 void MainWindow::setColorForCurrentLampLight(int id)
@@ -102,6 +104,21 @@ void MainWindow::loadRoomList(const QJsonObject &json)
     }
 }
 
+void MainWindow::lampRotation(Lamp *lamp, qreal angle)
+{
+    QRectF bbox = lamp->boundingRect().normalized();
+    QPointF center = bbox.center();
+
+    lamp->SetLampAngle(angle); // set angle and do transform
+
+    QTransform xForm;
+    xForm.translate(center.x(), center.y());
+    xForm.rotate(angle);
+    xForm.translate(-center.x(), -center.y());
+
+    lamp->setTransform(xForm, false);
+}
+
 void MainWindow::read(const QJsonObject &json)
 {
     mLampList.clear();
@@ -111,13 +128,19 @@ void MainWindow::read(const QJsonObject &json)
 
     QJsonArray lampArray = json["lamps"].toArray();
 
+    ui->graphicsViewCurrentRoom->setFixedSize(mWidth, mHeight);
+    ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
+    ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
+
     for(int lampIndex = 0; lampIndex < lampArray.size(); ++lampIndex)
     {
         QJsonObject lampObject = lampArray[lampIndex].toObject();
         Lamp lmp;
         lmp.read(lampObject);
 
-        Lamp *lamp = new Lamp(lmp.lampXCoordinate(), lmp.lampYCoordinate(), lmp.lampWidth(), lmp.lampHeight(), lmp.lampId());
+        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId());
+        lamp->setX(lmp.lampXCoordinate());
+        lamp->setY(lmp.lampYCoordinate());
         lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
         lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
         lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
@@ -125,19 +148,7 @@ void MainWindow::read(const QJsonObject &json)
 //        lamp->setLampLightWidth(lmp.lampLightWidth());
 //        lamp->setLampLightHeight(lmp.lampLightHeight());
 
-        // rotate
-        QRectF bbox = lamp->boundingRect().normalized();
-        QPointF center = bbox.center();
-
-        lamp->SetLampAngle(lmp.lampAngle()); // set angle and do transform
-
-        QTransform xForm;
-        xForm.translate(center.x(), center.y());
-        xForm.rotate(lmp.lampAngle());
-        xForm.translate(-center.x(), -center.y());
-
-        lamp->setTransform(xForm, false);
-        //
+        lampRotation(lamp, lmp.lampAngle());
 
         lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
         lamp->setBrush(Qt::black);
@@ -148,9 +159,6 @@ void MainWindow::read(const QJsonObject &json)
         mLampList.append(lamp);
         mScene->addItem(lamp);
     }
-    ui->graphicsViewCurrentRoom->setFixedSize(mWidth, mHeight);
-    ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
-    ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
 }
 
 void MainWindow::write(QJsonObject &json) const

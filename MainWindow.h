@@ -36,6 +36,7 @@ protected slots:
 
  private:
     void loadRoomList(const QJsonObject &json);
+    void lampRotation(Lamp *lamp, qreal angle);
 
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
