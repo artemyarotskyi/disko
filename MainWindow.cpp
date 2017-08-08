@@ -121,9 +121,23 @@ void MainWindow::read(const QJsonObject &json)
         lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
         lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
         lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
-        lamp->SetLampAngle(lmp.lampAngle()); // set angle and do transform
+
 //        lamp->setLampLightWidth(lmp.lampLightWidth());
 //        lamp->setLampLightHeight(lmp.lampLightHeight());
+
+        // rotate
+        QRectF bbox = lamp->boundingRect().normalized();
+        QPointF center = bbox.center();
+
+        lamp->SetLampAngle(lmp.lampAngle()); // set angle and do transform
+
+        QTransform xForm;
+        xForm.translate(center.x(), center.y());
+        xForm.rotate(lmp.lampAngle());
+        xForm.translate(-center.x(), -center.y());
+
+        lamp->setTransform(xForm, false);
+        //
 
         lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
         lamp->setBrush(Qt::black);
