@@ -109,7 +109,7 @@ void MainWindow::lampRotation(Lamp *lamp, qreal angle)
     QRectF bbox = lamp->boundingRect().normalized();
     QPointF center = bbox.center();
 
-    lamp->SetLampAngle(angle); // set angle and do transform
+    lamp->SetLampAngle(angle);
 
     QTransform xForm;
     xForm.translate(center.x(), center.y());
@@ -138,15 +138,12 @@ void MainWindow::read(const QJsonObject &json)
         Lamp lmp;
         lmp.read(lampObject);
 
-        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId());
+        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
         lamp->setX(lmp.lampXCoordinate());
         lamp->setY(lmp.lampYCoordinate());
         lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
         lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
         lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
-
-//        lamp->setLampLightWidth(lmp.lampLightWidth());
-//        lamp->setLampLightHeight(lmp.lampLightHeight());
 
         lampRotation(lamp, lmp.lampAngle());
 

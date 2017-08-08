@@ -18,7 +18,7 @@ class Lamp : public QObject, public QGraphicsRectItem
 {
     Q_OBJECT
 public:
-    Lamp(qreal x, qreal y, qreal width, qreal height, int id);
+    Lamp(qreal x, qreal y, qreal width, qreal height, int id, qreal lightWidth = 42, qreal lightHeight = 40);
     Lamp();
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

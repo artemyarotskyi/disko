@@ -2,14 +2,14 @@
 
 #include "math.h"
 
-LampLight::LampLight(QGraphicsRectItem *parent):
+LampLight::LampLight(QGraphicsRectItem *parent, qreal width, qreal height):
     mOutterBorderColor(Qt::black),
     mOutterBorderPen(),
     mLocation(0, 0),
     mDragStart(0, 0),
     mColor(Qt::yellow),
-    mWidth(42),
-    mHeight(40),
+    mWidth(width),
+    mHeight(height),
     mCornerDragStart(0, 0),
     mXCornerGrabBuffer(4),
     mYCornerGrabBuffer(4),
@@ -45,22 +45,22 @@ void LampLight::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidge
 
 qreal LampLight::lightWidth() const
 {
-    return mDrawingWidth;   
+    return mWidth;
 }
 
 void LampLight::setLightWidth(qreal width)
 {
-    mDrawingWidth = width;
+    mWidth = width;
 }
 
 qreal LampLight::lightHeight() const
 {
-    return mDrawingHeight;
+    return mHeight;
 }
 
 void LampLight::setLightHeight(qreal height)
 {
-    mDrawingHeight = height;
+    mHeight = height;
 }
 
 QColor LampLight::lightColor() const
@@ -190,7 +190,7 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 
 void LampLight::setCornerPosition()
 {
-    mCorners[0]->setPos(mDrawingOriginX+1, mDrawingHeight);
+    mCorners[0]->setPos(mDrawingOriginX + 1, mDrawingHeight);
 }
 
 void LampLight::setLightCenterPosition()

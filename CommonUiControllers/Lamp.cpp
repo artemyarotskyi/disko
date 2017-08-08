@@ -33,7 +33,7 @@ void rotateItem(Lamp *lamp, QPointF center1, QPointF moved, QPointF initial_pos)
     lamp->setTransform(xForm, false);
 }
 
-Lamp::Lamp(qreal x, qreal y, qreal width, qreal height, int id):
+Lamp::Lamp(qreal x, qreal y, qreal width, qreal height, int id, qreal lightWidth, qreal lightHeight):
     QGraphicsRectItem(x, y, width, height),
     mLampId(id),
     mX(x),
@@ -41,7 +41,7 @@ Lamp::Lamp(qreal x, qreal y, qreal width, qreal height, int id):
     mWidth(width),
     mHeight(height),
     mAngle(0),
-    mLampLight(new LampLight(this)),
+    mLampLight(new LampLight(this, lightWidth, lightHeight)),
     mZindex(0)
 {
     mInitialPos.setX(0.0);
