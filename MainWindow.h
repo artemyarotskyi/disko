@@ -27,6 +27,8 @@ public:
     ~MainWindow();
 
 protected slots:
+    void createRoom();
+
     void createCamera();
     void deleteCamera(int id);
     void setColorForCurrentLampLight(int id);
@@ -55,8 +57,8 @@ protected slots:
 
     QList<Lamp*> mLampList;
 
-    int mWidth = 601;
-    int mHeight = 480;
+    int mWidth = 601; // default 601
+    int mHeight = 480; // default 480
 
     const QString mPath = "C:/sqlite/disko.db";
 

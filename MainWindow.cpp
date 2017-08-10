@@ -29,9 +29,14 @@ MainWindow::~MainWindow()
     delete mScene;
 }
 
+void MainWindow::createRoom()
+{
+
+}
+
 void MainWindow::createCamera()
 {
-    ui->graphicsViewCurrentRoom->setFixedSize(mWidth, mHeight);
+    ui->graphicsViewCurrentRoom->setFixedSize(601, 480);
     ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
     ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
     //    //mScene->setSceneRect(0,0,597,477);
@@ -192,6 +197,7 @@ void MainWindow::write(QJsonObject &json) const
 
 void MainWindow::SubscribeToFormEvents()
 {
+    connect(ui->btnCreateNewRoom, SIGNAL(clicked()), this, SLOT(createRoom()));
     connect(ui->btnAddLamp, SIGNAL(clicked()), this, SLOT(createCamera()));
 
     connect(ui->btnSaveRoom, SIGNAL(clicked()), this, SLOT(saveRoom()));
