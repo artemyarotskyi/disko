@@ -28,6 +28,7 @@ public:
 
 protected slots:
     void createRoom();
+    void deleteRoom();
 
     void createCamera();
     void deleteCamera(int id);
@@ -36,6 +37,7 @@ protected slots:
 
     void saveRoom();
     void loadRoom(int row, int);
+    void deleteRoomFromeDb(int id);
 
  private:
     void loadRoomList(const QJsonObject &json);

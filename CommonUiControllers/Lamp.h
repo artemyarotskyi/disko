@@ -26,7 +26,11 @@ public:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 
     qreal lampXCoordinate() const;
+    void setLampXCoordinate(qreal x);
+
     qreal lampYCoordinate() const;
+    void setLampYCoordinate(qreal y);
+
     qreal lampWidth() const;
     qreal lampHeight() const;
 

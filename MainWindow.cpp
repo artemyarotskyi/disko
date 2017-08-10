@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mCameraId(1),
-    mScene(new QGraphicsScene()),
+    //mScene(new QGraphicsScene()),
     mRepository(new OperationRepository(mPath ,this))
 {
     ui->setupUi(this);
@@ -17,8 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     SetRoomsListTableWidgetOptions();
     SubscribeToFormEvents();
-
- //   mScene->setSceneRect(0,0,597,477);
 
     loadRoomList(mRepository->GetAllRooms());
 }
@@ -31,7 +29,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::createRoom()
 {
+    deleteRoom();
 
+    if(mScene == nullptr)
+    {
+        mScene = new QGraphicsScene(this);
+        ui->graphicsViewCurrentRoom->setScene(mScene);
+    }
+}
+
+void MainWindow::deleteRoom()
+{
+    if(mScene != nullptr)
+    {
+        mScene->clear();
+        mScene = nullptr;
+        delete mScene;
+    }
 }
 
 void MainWindow::createCamera()
@@ -107,8 +121,16 @@ void MainWindow::saveRoom()
 
 void MainWindow::loadRoom(int row, int)
 {
+    deleteRoom();
+    createRoom();
+
     int id = ui->tblViewRooms->item(row,1)->text().toInt();
-    read(mRepository->GetCurrentRoom(id));    
+    read(mRepository->GetCurrentRoom(id));
+}
+
+void MainWindow::deleteRoomFromeDb(int id)
+{
+
 }
 
 void MainWindow::loadRoomList(const QJsonObject &json)
@@ -161,8 +183,12 @@ void MainWindow::read(const QJsonObject &json)
         lmp.read(lampObject);
 
         Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-        lamp->setX(lmp.lampXCoordinate());
-        lamp->setY(lmp.lampYCoordinate());
+
+        lamp->setLampXCoordinate(lmp.lampXCoordinate());
+        lamp->setLampYCoordinate(lmp.lampYCoordinate());
+        lamp->setX(lamp->lampXCoordinate());
+        lamp->setY(lamp->lampYCoordinate());
+
         lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
         lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
         lamp->lampLight()->setLampLightColor(lmp.lampLightColor());

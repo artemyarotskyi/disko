@@ -112,9 +112,19 @@ qreal Lamp::lampXCoordinate() const
     return mX;
 }
 
+void Lamp::setLampXCoordinate(qreal x)
+{
+    mX = x;
+}
+
 qreal Lamp::lampYCoordinate() const
 {
     return mY;
+}
+
+void Lamp::setLampYCoordinate(qreal y)
+{
+    mY = y;
 }
 
 qreal Lamp::lampWidth() const
