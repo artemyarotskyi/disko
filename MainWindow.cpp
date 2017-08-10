@@ -48,6 +48,23 @@ void MainWindow::createCamera()
     mCameraId++;
 }
 
+void MainWindow::deleteCamera(int id)
+{
+    if(id !=0)
+    {
+        for(int i = 0; i < mLampList.size(); ++i)
+        {
+            if(mLampList.at(i)->lampId() == id)
+            {
+                mScene->removeItem(mLampList.at(i));
+                mLampList.removeAt(i);
+                mCurrentCameraId = 0;
+                break;
+            }
+        }
+    }
+}
+
 void MainWindow::setColorForCurrentLampLight(int id)
 {
     if(id != 0)
@@ -181,6 +198,7 @@ void MainWindow::SubscribeToFormEvents()
     connect(ui->tblViewRooms, SIGNAL(cellClicked(int,int)), this, SLOT(loadRoom(int,int)));
 
     connect(ui->btnColor, &QPushButton::clicked, this, [=]{setColorForCurrentLampLight(mCurrentCameraId);});
+    connect(ui->btnDeleteLamp, &QPushButton::clicked, this, [=]{deleteCamera(mCurrentCameraId);});
 }
 
 void MainWindow::SetRoomsListTableWidgetOptions()

@@ -27,7 +27,8 @@ public:
     ~MainWindow();
 
 protected slots:
-    void createCamera();    
+    void createCamera();
+    void deleteCamera(int id);
     void setColorForCurrentLampLight(int id);
     void setCurrentCameraId(int id);
 
