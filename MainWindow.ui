@@ -411,8 +411,8 @@
      <font>
       <family>Gadugi</family>
       <pointsize>16</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
+      <weight>50</weight>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -432,8 +432,8 @@
      <font>
       <family>Gadugi</family>
       <pointsize>16</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
+      <weight>50</weight>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">

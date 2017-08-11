@@ -39,6 +39,9 @@ protected slots:
     void loadRoom(int row, int);
     void deleteRoomFromeDb(int id);
 
+    void zoomIn();
+    void zoomOut();
+
  private:
     void loadRoomList(const QJsonObject &json);
     void lampRotation(Lamp *lamp, qreal angle);

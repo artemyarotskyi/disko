@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     SubscribeToFormEvents();
 
     loadRoomList(mRepository->GetAllRooms());
+    //QGraphicsView::scale(qreal, qreal);
 }
 
 MainWindow::~MainWindow()
@@ -133,6 +134,16 @@ void MainWindow::deleteRoomFromeDb(int id)
 
 }
 
+void MainWindow::zoomIn()
+{
+    ui->graphicsViewCurrentRoom->scale(2,2);
+}
+
+void MainWindow::zoomOut()
+{
+    ui->graphicsViewCurrentRoom->scale(.5,.5);
+}
+
 void MainWindow::loadRoomList(const QJsonObject &json)
 {
     ui->tblViewRooms->clearContents();
@@ -231,6 +242,9 @@ void MainWindow::SubscribeToFormEvents()
 
     connect(ui->btnColor, &QPushButton::clicked, this, [=]{setColorForCurrentLampLight(mCurrentCameraId);});
     connect(ui->btnDeleteLamp, &QPushButton::clicked, this, [=]{deleteCamera(mCurrentCameraId);});
+
+    connect(ui->btnZoomPlus, SIGNAL(clicked(bool)), this, SLOT(zoomIn()));
+    connect(ui->btnZoomMinus, SIGNAL(clicked(bool)), this, SLOT(zoomOut()));
 }
 
 void MainWindow::SetRoomsListTableWidgetOptions()
