@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     mCameraId(1),
-    //mScene(new QGraphicsScene()),
     mRepository(new OperationRepository(mPath ,this))
 {
     ui->setupUi(this);
@@ -18,8 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     SetRoomsListTableWidgetOptions();
     SubscribeToFormEvents();
 
-    loadRoomList(mRepository->GetAllRooms());
-    //QGraphicsView::scale(qreal, qreal);
+    loadRoomList(mRepository->GetAllRooms());    
 }
 
 MainWindow::~MainWindow()
@@ -51,7 +49,7 @@ void MainWindow::deleteRoom()
 
 void MainWindow::createCamera()
 {
-    ui->graphicsViewCurrentRoom->setFixedSize(601, 480);
+    ui->graphicsViewCurrentRoom->setFixedSize(600, 520);
     ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
     ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
     //    //mScene->setSceneRect(0,0,597,477);

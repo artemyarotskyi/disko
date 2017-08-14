@@ -25,8 +25,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>181</width>
-      <height>51</height>
+      <width>180</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -38,16 +38,16 @@
      </font>
     </property>
     <property name="text">
-     <string>Create new room</string>
+     <string>Create room</string>
     </property>
    </widget>
    <widget class="QGraphicsView" name="graphicsViewCurrentRoom">
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>100</y>
-      <width>601</width>
-      <height>480</height>
+      <y>61</y>
+      <width>600</width>
+      <height>520</height>
      </rect>
     </property>
    </widget>
@@ -55,7 +55,7 @@
     <property name="geometry">
      <rect>
       <x>65</x>
-      <y>70</y>
+      <y>210</y>
       <width>60</width>
       <height>25</height>
      </rect>
@@ -74,9 +74,9 @@
     <property name="geometry">
      <rect>
       <x>810</x>
-      <y>100</y>
+      <y>252</y>
       <width>180</width>
-      <height>381</height>
+      <height>301</height>
      </rect>
     </property>
     <widget class="QPushButton" name="btnUndo">
@@ -123,8 +123,8 @@
      <rect>
       <x>200</x>
       <y>10</y>
-      <width>601</width>
-      <height>80</height>
+      <width>600</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -134,7 +134,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>10</y>
+       <y>12</y>
        <width>95</width>
        <height>16</height>
       </rect>
@@ -157,27 +157,7 @@
       <rect>
        <x>120</x>
        <y>10</y>
-       <width>201</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="txtRoomWidth">
-     <property name="geometry">
-      <rect>
-       <x>380</x>
-       <y>10</y>
-       <width>67</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="txtRoomHeight">
-     <property name="geometry">
-      <rect>
-       <x>512</x>
-       <y>10</y>
-       <width>67</width>
+       <width>221</width>
        <height>20</height>
       </rect>
      </property>
@@ -185,8 +165,8 @@
     <widget class="QLabel" name="lblRoomWidth">
      <property name="geometry">
       <rect>
-       <x>334</x>
-       <y>10</y>
+       <x>364</x>
+       <y>12</y>
        <width>51</width>
        <height>20</height>
       </rect>
@@ -198,14 +178,14 @@
       </font>
      </property>
      <property name="text">
-      <string>width</string>
+      <string>width:</string>
      </property>
     </widget>
     <widget class="QLabel" name="lblRoomHeight">
      <property name="geometry">
       <rect>
-       <x>461</x>
-       <y>10</y>
+       <x>476</x>
+       <y>12</y>
        <width>51</width>
        <height>20</height>
       </rect>
@@ -217,40 +197,16 @@
       </font>
      </property>
      <property name="text">
-      <string>height</string>
+      <string>height:</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btnAddLamp">
+    <widget class="QLabel" name="lblRoomWidth_2">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>180</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Gadugi</family>
-       <pointsize>12</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
-     <property name="text">
-      <string>Add lamp</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnColor">
-     <property name="geometry">
-      <rect>
-       <x>210</x>
-       <y>40</y>
-       <width>180</width>
-       <height>30</height>
+       <x>417</x>
+       <y>12</y>
+       <width>51</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="font">
@@ -260,16 +216,16 @@
       </font>
      </property>
      <property name="text">
-      <string>Choose color</string>
+      <string>600</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btnDeleteLamp">
+    <widget class="QLabel" name="lblRoomHeigth">
      <property name="geometry">
       <rect>
-       <x>400</x>
-       <y>40</y>
-       <width>180</width>
-       <height>30</height>
+       <x>529</x>
+       <y>12</y>
+       <width>51</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="font">
@@ -279,17 +235,17 @@
       </font>
      </property>
      <property name="text">
-      <string>Delete lamp</string>
+      <string>520</string>
      </property>
     </widget>
    </widget>
    <widget class="QPushButton" name="btnSaveRoom">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>10</y>
-      <width>181</width>
-      <height>51</height>
+      <x>10</x>
+      <y>60</y>
+      <width>180</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -305,8 +261,8 @@
    <widget class="QLabel" name="lblTitleHistory">
     <property name="geometry">
      <rect>
-      <x>865</x>
-      <y>70</y>
+      <x>870</x>
+      <y>222</y>
       <width>60</width>
       <height>25</height>
      </rect>
@@ -325,9 +281,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
-      <width>181</width>
-      <height>481</height>
+      <y>240</y>
+      <width>180</width>
+      <height>341</height>
      </rect>
     </property>
     <property name="editTriggers">
@@ -382,8 +338,8 @@
    <widget class="QLabel" name="lblTitleZoom">
     <property name="geometry">
      <rect>
-      <x>866</x>
-      <y>490</y>
+      <x>870</x>
+      <y>160</y>
       <width>60</width>
       <height>25</height>
      </rect>
@@ -402,7 +358,7 @@
     <property name="geometry">
      <rect>
       <x>811</x>
-      <y>520</y>
+      <y>190</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -423,7 +379,7 @@
     <property name="geometry">
      <rect>
       <x>900</x>
-      <y>520</y>
+      <y>190</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -438,6 +394,106 @@
     </property>
     <property name="text">
      <string>-</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnUpdateRoom">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>180</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gadugi</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Update room</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnAddLamp">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>10</y>
+      <width>180</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gadugi</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Add lamp</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnColor">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>110</y>
+      <width>180</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gadugi</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Choose color</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnDeleteLamp">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>60</y>
+      <width>180</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gadugi</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Delete lamp</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnClearRoom">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>160</y>
+      <width>180</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Gadugi</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Clear room</string>
     </property>
    </widget>
   </widget>

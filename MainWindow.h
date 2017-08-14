@@ -62,8 +62,8 @@ protected slots:
 
     QList<Lamp*> mLampList;
 
-    int mWidth = 601; // default 601
-    int mHeight = 480; // default 480
+    int mWidth = 600; // default 601
+    int mHeight = 520; // default 480
 
     const QString mPath = "C:/sqlite/disko.db";
 
