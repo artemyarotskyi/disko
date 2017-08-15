@@ -93,17 +93,19 @@ void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         else
         {
             if((this->x() >= 0) && (this->y() >= 0) &&
-               (this->x() + 53 <= 601) && (this->y() + 53 <= 480))
+                    (this->x() + 53 <= 600) && (this->y() + 53 <= 520))
             {
                 QAbstractGraphicsShapeItem::mouseMoveEvent(event);
-                mX = this->x();
-                mY = this->y();
             }
             if(this->x() < 0) this->setX(1);
             if(this->y() < 0) this->setY(1);
-            if(this->x() + 53 > 601) this->setX(601 - 54);
-            if(this->y() + 53 > 480) this->setY(480 - 54);
+            if(this->x() + 53 > 600) this->setX(600 - 54);
+            if(this->y() + 53 > 520) this->setY(520 - 54);
+
+            mX = this->x();
+            mY = this->y();
         }
+
     }
 }
 

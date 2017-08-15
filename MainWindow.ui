@@ -357,7 +357,7 @@
    <widget class="QPushButton" name="btnZoomPlus">
     <property name="geometry">
      <rect>
-      <x>811</x>
+      <x>810</x>
       <y>190</y>
       <width>91</width>
       <height>23</height>

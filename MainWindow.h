@@ -39,6 +39,7 @@ protected slots:
     void saveRoom();
     void loadRoom(int row, int);
     void deleteRoomFromeDb(int id);
+    void updateRoom();
 
     void zoomIn();
     void zoomOut();
@@ -55,11 +56,12 @@ protected slots:
 
     Ui::MainWindow *ui;    
     QGraphicsScene *mScene;
-    QString mSceneName = "Room 1";
-    int mSceneId;
+    QString mSceneName = "Room 1";    
 
     int mCameraId;
     int mCurrentCameraId;
+
+    int mCurrentRoomId;
 
     QList<Lamp*> mLampList;
 

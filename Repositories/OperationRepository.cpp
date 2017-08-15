@@ -29,15 +29,15 @@ void OperationRepository::SaveRoom(QJsonObject &room)
         qDebug() << "Save room error:" << query.lastError();
 }
 
-void OperationRepository::UpdateRoom(QJsonObject &room)
+void OperationRepository::UpdateRoom(QJsonObject &room, int id)
 {
-    QString roomName;    
-    int id;
+    QJsonDocument doc(room);
+    QString roomContent(doc.toJson(QJsonDocument::Compact));
 
     QSqlQuery query;
-    query.prepare(mSaveRoom);
-    query.bindValue(":roomName", roomName);
-    query.bindValue(":roomContent", room["lamps"].toString());
+    query.prepare(mUpdateRoom);
+    query.bindValue(":roomName", room["roomName"].toString());
+    query.bindValue(":roomContent", roomContent);
     query.bindValue(":id", id);
     if(!query.exec())
         qDebug() << "Update room error:" << query.lastError();

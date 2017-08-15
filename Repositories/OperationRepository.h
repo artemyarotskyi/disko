@@ -16,7 +16,7 @@ public:
     explicit OperationRepository(const QString &path, QObject *parent = 0);
 
     void SaveRoom(QJsonObject &room);
-    void UpdateRoom(QJsonObject &room);
+    void UpdateRoom(QJsonObject &room, int id);
     void DeleteRoom(int id);
     QJsonObject GetAllRooms();
     QJsonObject GetCurrentRoom(int id);

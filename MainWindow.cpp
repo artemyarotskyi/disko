@@ -34,6 +34,9 @@ void MainWindow::createRoom()
     {
         mScene = new QGraphicsScene(this);
         ui->graphicsViewCurrentRoom->setScene(mScene);
+        ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
+        ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
+        //mScene->setSceneRect(0,0,597,477);
     }
 }
 
@@ -41,6 +44,7 @@ void MainWindow::deleteRoom()
 {
     if(mScene != nullptr)
     {
+        mLampList.clear();
         mScene->clear();
         mScene = nullptr;
         delete mScene;
@@ -50,15 +54,11 @@ void MainWindow::deleteRoom()
 void MainWindow::clearRoom()
 {
     mScene->clear();
+    mLampList.clear();
 }
 
 void MainWindow::createCamera()
 {
-    ui->graphicsViewCurrentRoom->setFixedSize(600, 520);
-    ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
-    ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
-    //    //mScene->setSceneRect(0,0,597,477);
-
     Lamp *lamp = new Lamp(0, 0, 53, 53, mCameraId);
     lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
     lamp->setBrush(Qt::black);
@@ -128,13 +128,20 @@ void MainWindow::loadRoom(int row, int)
     deleteRoom();
     createRoom();
 
-    int id = ui->tblViewRooms->item(row,1)->text().toInt();
-    read(mRepository->GetCurrentRoom(id));
+    mCurrentRoomId = ui->tblViewRooms->item(row,1)->text().toInt();
+    read(mRepository->GetCurrentRoom(mCurrentRoomId));
 }
 
 void MainWindow::deleteRoomFromeDb(int id)
 {
 
+}
+
+void MainWindow::updateRoom()
+{
+    QJsonObject roomObject;
+    write(roomObject);
+    mRepository->UpdateRoom(roomObject, mCurrentRoomId);
 }
 
 void MainWindow::zoomIn()
@@ -181,14 +188,9 @@ void MainWindow::read(const QJsonObject &json)
 {
     mLampList.clear();
 
-    mSceneName = json["roomName"].toString();
-    mSceneId = json["roomId"].toInt();
+    mSceneName = json["roomName"].toString();    
 
     QJsonArray lampArray = json["lamps"].toArray();
-
-    ui->graphicsViewCurrentRoom->setFixedSize(mWidth, mHeight);
-    ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
-    ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
 
     for(int lampIndex = 0; lampIndex < lampArray.size(); ++lampIndex)
     {
@@ -243,6 +245,7 @@ void MainWindow::SubscribeToFormEvents()
 
     connect(ui->btnSaveRoom, SIGNAL(clicked()), this, SLOT(saveRoom()));
     connect(ui->tblViewRooms, SIGNAL(cellClicked(int,int)), this, SLOT(loadRoom(int,int)));
+    connect(ui->btnUpdateRoom, SIGNAL(clicked()), this, SLOT(updateRoom()));
 
     connect(ui->btnColor, &QPushButton::clicked, this, [=]{setColorForCurrentLampLight(mCurrentCameraId);});
     connect(ui->btnDeleteLamp, &QPushButton::clicked, this, [=]{deleteCamera(mCurrentCameraId);});
