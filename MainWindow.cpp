@@ -47,6 +47,11 @@ void MainWindow::deleteRoom()
     }
 }
 
+void MainWindow::clearRoom()
+{
+    mScene->clear();
+}
+
 void MainWindow::createCamera()
 {
     ui->graphicsViewCurrentRoom->setFixedSize(600, 520);
@@ -234,6 +239,7 @@ void MainWindow::SubscribeToFormEvents()
 {
     connect(ui->btnCreateNewRoom, SIGNAL(clicked()), this, SLOT(createRoom()));
     connect(ui->btnAddLamp, SIGNAL(clicked()), this, SLOT(createCamera()));
+    connect(ui->btnClearRoom, SIGNAL(clicked()), this, SLOT(clearRoom()));
 
     connect(ui->btnSaveRoom, SIGNAL(clicked()), this, SLOT(saveRoom()));
     connect(ui->tblViewRooms, SIGNAL(cellClicked(int,int)), this, SLOT(loadRoom(int,int)));

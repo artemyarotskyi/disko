@@ -29,6 +29,7 @@ public:
 protected slots:
     void createRoom();
     void deleteRoom();
+    void clearRoom();
 
     void createCamera();
     void deleteCamera(int id);
