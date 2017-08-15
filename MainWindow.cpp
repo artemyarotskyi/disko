@@ -16,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     SetRoomsListTableWidgetOptions();
     SubscribeToFormEvents();
+    SetUiElementsState(false,false,false,
+                       false,false,false,
+                       false,false,false,false);
 
     loadRoomList(mRepository->GetAllRooms());    
 }
@@ -36,8 +39,11 @@ void MainWindow::createRoom()
         ui->graphicsViewCurrentRoom->setScene(mScene);
         ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
         ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
-        //mScene->setSceneRect(0,0,597,477);
     }
+
+    SetUiElementsState(true, false, true,
+                       true, false, false,
+                       true, true, false, false);
 }
 
 void MainWindow::deleteRoom()
@@ -86,6 +92,9 @@ void MainWindow::deleteCamera(int id)
             }
         }
     }
+
+    ui->btnColor->setEnabled(false);
+    ui->btnDeleteLamp->setEnabled(false);
 }
 
 void MainWindow::setColorForCurrentLampLight(int id)
@@ -113,6 +122,8 @@ void MainWindow::setColorForCurrentLampLight(int id)
 void MainWindow::setCurrentCameraId(int id)
 {
     mCurrentCameraId = id;
+    ui->btnColor->setEnabled(true);
+    ui->btnDeleteLamp->setEnabled(true);
 }
 
 void MainWindow::saveRoom()
@@ -121,6 +132,8 @@ void MainWindow::saveRoom()
     write(roomObject);
     mRepository->SaveRoom(roomObject);
     loadRoomList(mRepository->GetAllRooms());
+
+    ui->btnUpdateRoom->setEnabled(true);
 }
 
 void MainWindow::loadRoom(int row, int)
@@ -130,6 +143,8 @@ void MainWindow::loadRoom(int row, int)
 
     mCurrentRoomId = ui->tblViewRooms->item(row,1)->text().toInt();
     read(mRepository->GetCurrentRoom(mCurrentRoomId));
+
+    ui->btnUpdateRoom->setEnabled(true);
 }
 
 void MainWindow::deleteRoomFromeDb(int id)
@@ -166,6 +181,8 @@ void MainWindow::loadRoomList(const QJsonObject &json)
         ui->tblViewRooms->insertRow(ui->tblViewRooms->rowCount());
         ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 0, new QTableWidgetItem(subtree.value("roomName").toString()));
         ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 1, new QTableWidgetItem(subtree.value("id").toString()));
+
+        mCurrentRoomId = subtree.value("id").toString().toInt(); // for update room after save
     }
 }
 
@@ -262,4 +279,23 @@ void MainWindow::SetRoomsListTableWidgetOptions()
 
     ui->tblViewRooms->setColumnWidth(0,181);
     ui->tblViewRooms->setColumnHidden(1, true);
+}
+
+void MainWindow::SetUiElementsState(bool saveRoom, bool updateRoom,bool clearRoom,
+                                    bool addLamp, bool deleteLamp, bool color,
+                                    bool zoomP, bool zoomM, bool undo, bool redo)
+{
+    ui->btnSaveRoom->setEnabled(saveRoom);
+    ui->btnUpdateRoom->setEnabled(updateRoom);
+    ui->btnClearRoom->setEnabled(clearRoom);
+
+    ui->btnAddLamp->setEnabled(addLamp);
+    ui->btnDeleteLamp->setEnabled(deleteLamp);
+    ui->btnColor->setEnabled(color);
+
+    ui->btnZoomPlus->setEnabled(zoomP);
+    ui->btnZoomMinus->setEnabled(zoomM);
+    ui->btnUndo->setEnabled(undo);
+    ui->btnRedo->setEnabled(redo);
+
 }

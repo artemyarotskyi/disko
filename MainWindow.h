@@ -53,6 +53,9 @@ protected slots:
 
     void SubscribeToFormEvents();
     void SetRoomsListTableWidgetOptions();
+    void SetUiElementsState(bool saveRoom, bool updateRoom, bool clearRoom,
+                            bool addLamp, bool deleteLamp, bool color,
+                            bool zoomP, bool zoomM, bool undo, bool redo);
 
     Ui::MainWindow *ui;    
     QGraphicsScene *mScene;
@@ -65,8 +68,8 @@ protected slots:
 
     QList<Lamp*> mLampList;
 
-    int mWidth = 600; // default 601
-    int mHeight = 520; // default 480
+    int mWidth = 600;
+    int mHeight = 520;
 
     const QString mPath = "C:/sqlite/disko.db";
 

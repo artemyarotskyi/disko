@@ -378,7 +378,7 @@
    <widget class="QPushButton" name="btnZoomMinus">
     <property name="geometry">
      <rect>
-      <x>900</x>
+      <x>899</x>
       <y>190</y>
       <width>91</width>
       <height>23</height>
