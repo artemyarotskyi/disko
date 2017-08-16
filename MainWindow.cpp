@@ -169,6 +169,7 @@ void MainWindow::updateRoom()
     QJsonObject roomObject;
     write(roomObject);
     mRepository->UpdateRoom(roomObject, mCurrentRoomId);
+    loadRoomList(mRepository->GetAllRooms());
 }
 
 void MainWindow::zoomIn()
