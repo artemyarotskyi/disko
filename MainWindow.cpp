@@ -4,6 +4,8 @@
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QTableWidgetItem>
+#include <QHBoxLayout>
+#include "CommonUiControllers/TableButton.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -149,7 +151,17 @@ void MainWindow::loadRoom(int row, int)
 
 void MainWindow::deleteRoomFromeDb(int id)
 {
+    if(mCurrentRoomId == id)
+    {
+        deleteRoom();
+        SetUiElementsState(false,false,false,
+                           false,false,false,
+                           false,false,false,false);
 
+    }
+
+    mRepository->DeleteRoom(id);
+    loadRoomList(mRepository->GetAllRooms());
 }
 
 void MainWindow::updateRoom()
@@ -178,11 +190,25 @@ void MainWindow::loadRoomList(const QJsonObject &json)
     {
         QJsonObject subtree = roomArray.at(roomIndex).toObject();
 
+        mCurrentRoomId = subtree.value("id").toString().toInt(); // for update room after save
+
+        // add delete room button to room list
+        QWidget* pWidget = new QWidget();
+        TableButton* btnDeleteRoom = new TableButton(mCurrentRoomId);
+        btnDeleteRoom->setText("x");
+        connect(btnDeleteRoom, SIGNAL(clickTableButton(int)), this, SLOT(deleteRoomFromeDb(int)));
+
+        QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
+        pLayout->addWidget(btnDeleteRoom);
+        pLayout->setAlignment(Qt::AlignCenter);
+        pLayout->setContentsMargins(0, 0, 2, 0);
+        pWidget->setLayout(pLayout);
+        //
+
         ui->tblViewRooms->insertRow(ui->tblViewRooms->rowCount());
         ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 0, new QTableWidgetItem(subtree.value("roomName").toString()));
         ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 1, new QTableWidgetItem(subtree.value("id").toString()));
-
-        mCurrentRoomId = subtree.value("id").toString().toInt(); // for update room after save
+        ui->tblViewRooms->setCellWidget(roomIndex, 2,pWidget );
     }
 }
 
@@ -273,12 +299,13 @@ void MainWindow::SubscribeToFormEvents()
 
 void MainWindow::SetRoomsListTableWidgetOptions()
 {   
-    ui->tblViewRooms->setColumnCount(2);    
+    ui->tblViewRooms->setColumnCount(3);
     ui->tblViewRooms->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
     ui->tblViewRooms->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    ui->tblViewRooms->setColumnWidth(0,181);
+    ui->tblViewRooms->setColumnWidth(0,140);
     ui->tblViewRooms->setColumnHidden(1, true);
+    ui->tblViewRooms->setColumnWidth(2,41);
 }
 
 void MainWindow::SetUiElementsState(bool saveRoom, bool updateRoom,bool clearRoom,

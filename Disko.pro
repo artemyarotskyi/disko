@@ -23,6 +23,7 @@ HEADERS  += MainWindow.h \
     CommonUiControllers/LampLight.h \
     CommonUiControllers/CornerGrabber.h \
     CommonUiControllers/Lamp.h \
-    Repositories/OperationRepository.h
+    Repositories/OperationRepository.h \
+    CommonUiControllers/TableButton.h
 
 FORMS    += MainWindow.ui
