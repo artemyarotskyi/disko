@@ -231,7 +231,8 @@ void MainWindow::read(const QJsonObject &json)
 {
     mLampList.clear();
 
-    mSceneName = json["roomName"].toString();    
+    mSceneName = json["roomName"].toString();
+    ui->txtRoomName->setText(mSceneName);
 
     QJsonArray lampArray = json["lamps"].toArray();
 
@@ -265,7 +266,7 @@ void MainWindow::read(const QJsonObject &json)
     }
 }
 
-void MainWindow::write(QJsonObject &json) const
+void MainWindow::write(QJsonObject &json)
 {
     QJsonArray lampArray;
 
@@ -276,6 +277,7 @@ void MainWindow::write(QJsonObject &json) const
         lampArray.append(lampObject);
     }
 
+    mSceneName = ui->txtRoomName->text();
     json["roomName"] = mSceneName;
     json["lamps"] = lampArray;
 }

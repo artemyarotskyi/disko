@@ -161,6 +161,9 @@
        <height>20</height>
       </rect>
      </property>
+     <property name="text">
+      <string>New Room</string>
+     </property>
     </widget>
     <widget class="QLabel" name="lblRoomWidth">
      <property name="geometry">

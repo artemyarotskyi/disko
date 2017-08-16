@@ -49,7 +49,7 @@ protected slots:
     void lampRotation(Lamp *lamp, qreal angle);
 
     void read(const QJsonObject &json);
-    void write(QJsonObject &json) const;
+    void write(QJsonObject &json);
 
     void SubscribeToFormEvents();
     void SetRoomsListTableWidgetOptions();
@@ -59,7 +59,7 @@ protected slots:
 
     Ui::MainWindow *ui;    
     QGraphicsScene *mScene;
-    QString mSceneName = "Room 1";    
+    QString mSceneName;
 
     int mCameraId;
     int mCurrentCameraId;
