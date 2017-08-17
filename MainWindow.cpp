@@ -5,6 +5,7 @@
 #include <QJsonValue>
 #include <QTableWidgetItem>
 #include <QHBoxLayout>
+#include <QTimer>
 #include "CommonUiControllers/TableButton.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -14,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     mRepository(new OperationRepository(mPath ,this))
 {
     ui->setupUi(this);
-    ui->graphicsViewCurrentRoom->setScene(mScene);    
+    ui->graphicsViewCurrentRoom->setScene(mScene);
+    ui->lblMessage->setVisible(false);
 
     SetRoomsListTableWidgetOptions();
     SubscribeToFormEvents();
@@ -41,6 +43,8 @@ void MainWindow::createRoom()
         ui->graphicsViewCurrentRoom->setScene(mScene);
         ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
         ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
+
+        OutputMessage(mCreateRoomMessage);
     }
 
     SetUiElementsState(true, false, true,
@@ -55,14 +59,14 @@ void MainWindow::deleteRoom()
         mLampList.clear();
         mScene->clear();
         mScene = nullptr;
-        delete mScene;
+        delete mScene;        
     }
 }
 
 void MainWindow::clearRoom()
 {
     mScene->clear();
-    mLampList.clear();
+    mLampList.clear();   
 }
 
 void MainWindow::createCamera()
@@ -136,6 +140,8 @@ void MainWindow::saveRoom()
     loadRoomList(mRepository->GetAllRooms());
 
     ui->btnUpdateRoom->setEnabled(true);
+
+    OutputMessage(mSaveRoomMesssage);
 }
 
 void MainWindow::loadRoom(int row, int)
@@ -147,6 +153,8 @@ void MainWindow::loadRoom(int row, int)
     read(mRepository->GetCurrentRoom(mCurrentRoomId));
 
     ui->btnUpdateRoom->setEnabled(true);
+
+    OutputMessage(mLoadRoomMessage);
 }
 
 void MainWindow::deleteRoomFromeDb(int id)
@@ -162,6 +170,8 @@ void MainWindow::deleteRoomFromeDb(int id)
 
     mRepository->DeleteRoom(id);
     loadRoomList(mRepository->GetAllRooms());
+
+    OutputMessage(mDeleteRoomMessage);
 }
 
 void MainWindow::updateRoom()
@@ -170,6 +180,8 @@ void MainWindow::updateRoom()
     write(roomObject);
     mRepository->UpdateRoom(roomObject, mCurrentRoomId);
     loadRoomList(mRepository->GetAllRooms());
+
+    OutputMessage(mUpdateRoomMessage);
 }
 
 void MainWindow::zoomIn()
@@ -180,6 +192,11 @@ void MainWindow::zoomIn()
 void MainWindow::zoomOut()
 {
     ui->graphicsViewCurrentRoom->scale(.5,.5);
+}
+
+void MainWindow::setMessageVisibleToFalse()
+{
+    ui->lblMessage->setVisible(false);
 }
 
 void MainWindow::loadRoomList(const QJsonObject &json)
@@ -309,6 +326,13 @@ void MainWindow::SetRoomsListTableWidgetOptions()
     ui->tblViewRooms->setColumnWidth(0,140);
     ui->tblViewRooms->setColumnHidden(1, true);
     ui->tblViewRooms->setColumnWidth(2,41);
+}
+
+void MainWindow::OutputMessage(QString message)
+{
+    ui->lblMessage->setText(message);
+    ui->lblMessage->setVisible(true);
+    QTimer::singleShot(1500,this,SLOT(setMessageVisibleToFalse()));
 }
 
 void MainWindow::SetUiElementsState(bool saveRoom, bool updateRoom,bool clearRoom,

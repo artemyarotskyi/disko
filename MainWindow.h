@@ -44,6 +44,8 @@ protected slots:
     void zoomIn();
     void zoomOut();
 
+    void setMessageVisibleToFalse();
+
  private:
     void loadRoomList(const QJsonObject &json);
     void lampRotation(Lamp *lamp, qreal angle);
@@ -53,6 +55,7 @@ protected slots:
 
     void SubscribeToFormEvents();
     void SetRoomsListTableWidgetOptions();
+    void OutputMessage(QString message);
     void SetUiElementsState(bool saveRoom, bool updateRoom, bool clearRoom,
                             bool addLamp, bool deleteLamp, bool color,
                             bool zoomP, bool zoomM, bool undo, bool redo);
@@ -72,6 +75,12 @@ protected slots:
     int mHeight = 520;
 
     const QString mPath = "C:/sqlite/disko.db";
+
+    const QString mCreateRoomMessage = "Room has been created";
+    const QString mDeleteRoomMessage = "Room has been deleted";
+    const QString mSaveRoomMesssage = "Room has been saved";
+    const QString mUpdateRoomMessage = "Room has been updated";
+    const QString mLoadRoomMessage = "Room has been loaded";
 
     OperationRepository* mRepository;
 };
