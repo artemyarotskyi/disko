@@ -6,6 +6,7 @@
 #include <QTableWidgetItem>
 #include <QHBoxLayout>
 #include <QTimer>
+#include <QScrollBar>
 #include "CommonUiControllers/TableButton.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -330,6 +331,23 @@ void MainWindow::SetRoomsListTableWidgetOptions()
     ui->tblViewRooms->setColumnWidth(0,140);
     ui->tblViewRooms->setColumnHidden(1, true);
     ui->tblViewRooms->setColumnWidth(2,41);
+
+    ui->tblViewRooms->verticalScrollBar()->setStyleSheet("QScrollBar:vertical {"
+                                                         "    border: 1px solid #797979;"
+                                                         "    background:#ffffff;;"
+                                                         "    width:5px;    "
+                                                         "    margin: 0px 0px 0px 0px;"
+                                                         "}"
+                                                         "QScrollBar::handle:vertical {"
+                                                         "    background: #cccccc;"   // #18181a; #797979; #909090
+                                                         "    min-height: 0px;"
+                                                         "}"
+                                                         "QScrollBar::add-line:vertical {"
+                                                         "    height: 0px;"
+                                                         "}"
+                                                         "QScrollBar::sub-line:vertical {"
+                                                         "    height: 0 px;"
+                                                         "}");
 }
 
 void MainWindow::OutputMessage(QString message)
