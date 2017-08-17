@@ -134,6 +134,7 @@ void MainWindow::setCurrentCameraId(int id)
 
 void MainWindow::saveRoom()
 {
+    ui->btnSaveRoom->setEnabled(false);
     QJsonObject roomObject;
     write(roomObject);
     mRepository->SaveRoom(roomObject);
@@ -142,6 +143,7 @@ void MainWindow::saveRoom()
     ui->btnUpdateRoom->setEnabled(true);
 
     OutputMessage(mSaveRoomMesssage);
+    ui->btnSaveRoom->setEnabled(true);
 }
 
 void MainWindow::loadRoom(int row, int)
@@ -176,12 +178,14 @@ void MainWindow::deleteRoomFromeDb(int id)
 
 void MainWindow::updateRoom()
 {
+    ui->btnUpdateRoom->setEnabled(false);
     QJsonObject roomObject;
     write(roomObject);
     mRepository->UpdateRoom(roomObject, mCurrentRoomId);
     loadRoomList(mRepository->GetAllRooms());
 
     OutputMessage(mUpdateRoomMessage);
+    ui->btnUpdateRoom->setEnabled(true);
 }
 
 void MainWindow::zoomIn()
