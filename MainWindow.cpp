@@ -76,12 +76,18 @@ void MainWindow::createCamera()
     lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
     lamp->setBrush(Qt::black);
     mLampList.append(lamp);
+    mUndoStack.push_back(*lamp->createMemento());
 
     mScene->addItem(lamp);
 
     connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
+    connect(lamp, SIGNAL(lampMoveOrRotate(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+    connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
 
     mCameraId++;
+
+    ui->btnUndo->setEnabled(true);
+    ui->btnRedo->setEnabled(true);
 }
 
 void MainWindow::deleteCamera(int id)
@@ -119,6 +125,8 @@ void MainWindow::setColorForCurrentLampLight(int id)
                 {
                     lamp->lampLight()->setLampLightColor(color);
                     update();
+
+                    mUndoStack.push_back(*lamp->createMemento());
                 }
                 break;
             }
@@ -197,6 +205,50 @@ void MainWindow::zoomIn()
 void MainWindow::zoomOut()
 {
     ui->graphicsViewCurrentRoom->scale(.5,.5);
+}
+
+void MainWindow::undo()
+{
+    if(!mUndoStack.isEmpty())
+    {
+        Memento currentLamp = mUndoStack.pop();
+        mRedoStack.push_back(currentLamp);
+
+        for(int i = 0; i < mLampList.size(); ++i)
+        {
+            if(mLampList.at(i)->lampId() == currentLamp.id())
+            {
+                mLampList.at(i)->reinstateMemento(currentLamp);
+            }
+        }
+    }
+}
+
+void MainWindow::redo()
+{
+    if(!mRedoStack.isEmpty())
+    {
+        Memento currentLamp = mRedoStack.pop();
+        mUndoStack.push_back(currentLamp);
+
+        for(int i = 0; i < mLampList.size(); ++i)
+        {
+            if(mLampList.at(i)->lampId() == currentLamp.id())
+            {
+                mLampList.at(i)->reinstateMemento(currentLamp);
+            }
+        }
+    }
+}
+
+void MainWindow::moveLampChanges(Lamp* lamp)
+{
+    mUndoStack.push_back(*lamp->createMemento());
+}
+
+void MainWindow::changeLampLightSize(Lamp *lamp)
+{
+    mUndoStack.push_back(*lamp->createMemento());
 }
 
 void MainWindow::setMessageVisibleToFalse()
@@ -281,6 +333,8 @@ void MainWindow::read(const QJsonObject &json)
         lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
         lamp->setBrush(Qt::black);
 
+        mUndoStack.push_back(*lamp->createMemento());
+
         connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
         mCameraId = mCurrentCameraId + 1;
 
@@ -320,6 +374,9 @@ void MainWindow::SubscribeToFormEvents()
 
     connect(ui->btnZoomPlus, SIGNAL(clicked(bool)), this, SLOT(zoomIn()));
     connect(ui->btnZoomMinus, SIGNAL(clicked(bool)), this, SLOT(zoomOut()));
+
+    connect(ui->btnRedo, SIGNAL(clicked(bool)), this, SLOT(redo()));
+    connect(ui->btnUndo, SIGNAL(clicked(bool)), this, SLOT(undo()));
 }
 
 void MainWindow::SetRoomsListTableWidgetOptions()

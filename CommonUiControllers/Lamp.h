@@ -13,6 +13,7 @@
 #include <QJsonObject>
 #include <QString>
 #include <CommonUiControllers/LampLight.h>
+#include <CommonUiControllers/Memento.h>
 
 class Lamp : public QObject, public QGraphicsRectItem
 {
@@ -24,6 +25,9 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+
+    Memento* createMemento();
+    void reinstateMemento(Memento memento);
 
     qreal lampXCoordinate() const;
     void setLampXCoordinate(qreal x);
@@ -53,6 +57,12 @@ public:
 
 signals:
     void clickCamera(int);
+    void lampMoveOrRotate(Lamp*);
+    void lampLightSizeChange(Lamp*);
+
+protected slots:
+     void emitLampLightSizeChanges();
+
 
 private:
     QPointF mInitialPos;
@@ -65,6 +75,9 @@ private:
     qreal mWidth;
     qreal mHeight;
     qreal mAngle;
+
+    qreal mOldX;
+    qreal mOldY;
 
     LampLight *mLampLight;
 

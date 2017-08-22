@@ -119,6 +119,9 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
     {
         case QEvent::GraphicsSceneMousePress:
         {
+            mOldWidth = mWidth;
+            mOldHeight = mHeight;
+
             corner->setMouseState(CornerGrabber::kMouseDown);
             corner->mouseDownX = mevent->pos().x();
             corner->mouseDownY = mevent->pos().y();
@@ -128,6 +131,9 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         case QEvent::GraphicsSceneMouseRelease:
         {
             corner->setMouseState(CornerGrabber::kMouseReleased);
+
+            if((mHeight != mOldHeight) || (mWidth != mOldWidth))
+                emit lightSizeChanged(); // if size change
         }
         break;
 
@@ -182,7 +188,7 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         setCornerPosition();
         setLightCenterPosition();
 
-        this->update();
+        this->update();        
     }
 
     return true;

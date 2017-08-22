@@ -51,6 +51,8 @@ Lamp::Lamp(qreal x, qreal y, qreal width, qreal height, int id, qreal lightWidth
     mInitialCenter.setY(0.0);
 
     this->setFlags(QGraphicsItem::ItemIsSelectable);
+
+    connect(mLampLight, SIGNAL(lightSizeChanged()), this, SLOT(emitLampLightSizeChanges()));
 }
 
 Lamp::Lamp() : mLampLight(new LampLight(this)), mZindex(0)
@@ -60,6 +62,9 @@ Lamp::Lamp() : mLampLight(new LampLight(this)), mZindex(0)
 
 void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    mOldX = mX;
+    mOldY = mY;
+
     if(event->button() == Qt::LeftButton)
     {
         emit clickCamera(mLampId);
@@ -79,6 +84,9 @@ void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void Lamp::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QAbstractGraphicsShapeItem::mouseReleaseEvent(event);
+
+    if((mOldX != mX) && (mOldY != mY))
+        emit lampMoveOrRotate(this);
 }
 
 void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -104,9 +112,27 @@ void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
             mX = this->x();
             mY = this->y();
-        }
+        }        
+    }    
+}
 
-    }
+Memento* Lamp::createMemento()
+{    
+    return new Memento(mLampId, mX, mY, mWidth, mHeight, mAngle,
+                       mLampLight->lightColor(), mLampLight->lightWidth(), mLampLight->lightHeight());
+}
+
+void Lamp::reinstateMemento(Memento memento)
+{
+     mX = memento.mX;
+     mY = memento.mY;
+     mWidth = memento.mWidth;
+     mHeight = memento.mHeight;
+     mAngle = memento.mAngle;
+
+     mLampLight->setLampLightColor(memento.mLampLightColor);
+     mLampLight->setLightWidth(memento.mLampLightWidth);
+     mLampLight->setLightHeight(memento.mLampLightHeight);
 }
 
 qreal Lamp::lampXCoordinate() const
@@ -209,4 +235,9 @@ void Lamp::write(QJsonObject &json) const
     json["color"] =         mLampLight->lightColor().name();
     json["lightWidth"] =    mLampLight->lightWidth();
     json["lightHeight"] =   mLampLight->lightHeight();
+}
+
+void Lamp::emitLampLightSizeChanges()
+{
+    emit lampLightSizeChange(this);
 }

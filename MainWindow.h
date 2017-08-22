@@ -12,6 +12,7 @@
 #include <QStyleOptionGraphicsItem>
 #include <QBrush>
 #include <QList>
+#include <QStack>
 #include <QJsonObject>
 
 namespace Ui {
@@ -44,6 +45,12 @@ protected slots:
     void zoomIn();
     void zoomOut();
 
+    void undo();
+    void redo();
+
+    void moveLampChanges(Lamp *lamp);
+    void changeLampLightSize(Lamp *lamp);
+
     void setMessageVisibleToFalse();
 
  private:
@@ -63,6 +70,9 @@ protected slots:
     Ui::MainWindow *ui;    
     QGraphicsScene *mScene;
     QString mSceneName;
+
+    QStack<Memento> mUndoStack;
+    QStack<Memento> mRedoStack;
 
     int mCameraId;
     int mCurrentCameraId;

@@ -17,13 +17,15 @@ SOURCES += main.cpp\
     CommonUiControllers/LampLight.cpp \
     CommonUiControllers/CornerGrabber.cpp \
     CommonUiControllers/Lamp.cpp \
-    Repositories/OperationRepository.cpp
+    Repositories/OperationRepository.cpp \
+    CommonUiControllers/Memento.cpp
 
 HEADERS  += MainWindow.h \
     CommonUiControllers/LampLight.h \
     CommonUiControllers/CornerGrabber.h \
     CommonUiControllers/Lamp.h \
     Repositories/OperationRepository.h \
-    CommonUiControllers/TableButton.h
+    CommonUiControllers/TableButton.h \
+    CommonUiControllers/Memento.h
 
 FORMS    += MainWindow.ui
