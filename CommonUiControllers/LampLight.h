@@ -52,9 +52,6 @@ private:
 
     QColor mColor;
 
-    qreal mBoundingRectWidht;
-    qreal mBoundingRectHeight;
-
     qreal mWidth;
     qreal mHeight;
 

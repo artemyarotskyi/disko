@@ -124,6 +124,7 @@ Memento* Lamp::createMemento()
 
 void Lamp::reinstateMemento(Memento memento)
 {
+     mLampId = memento.mLampId;
      mX = memento.mX;
      mY = memento.mY;
      mWidth = memento.mWidth;

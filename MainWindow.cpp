@@ -98,9 +98,11 @@ void MainWindow::deleteCamera(int id)
         {
             if(mLampList.at(i)->lampId() == id)
             {
+                mUndoStack.push_back(*mLampList.at(i)->createMemento());
+
                 mScene->removeItem(mLampList.at(i));
                 mLampList.removeAt(i);
-                mCurrentCameraId = 0;
+                mCurrentCameraId = 0;                
                 break;
             }
         }
@@ -211,14 +213,42 @@ void MainWindow::undo()
 {
     if(!mUndoStack.isEmpty())
     {
-        Memento currentLamp = mUndoStack.pop();
-        mRedoStack.push_back(currentLamp);
+        Memento lastOperation = mUndoStack.pop();
+
+        mRedoStack.push_back(lastOperation);
+
+        Memento memento = mUndoStack.pop();
+ //
+        Lamp lmp;
+        lmp.reinstateMemento(memento);
+
+        Lamp *lamp = new Lamp(0,0,lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(), lmp.lampLightWidth(), lmp.lampLightHeight());
+
+        lamp->setLampXCoordinate(lmp.lampXCoordinate());
+        lamp->setLampYCoordinate(lmp.lampYCoordinate());
+        lamp->setX(lamp->lampXCoordinate());
+        lamp->setY(lamp->lampYCoordinate());
+
+        lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
+        lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
+        lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
+
+        lampRotation(lamp, lmp.lampAngle());
+
+        lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
+        lamp->setBrush(Qt::black);
+
+        connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
 
         for(int i = 0; i < mLampList.size(); ++i)
         {
-            if(mLampList.at(i)->lampId() == currentLamp.id())
+            if(mLampList.at(i)->lampId() == lamp->lampId())
             {
-                mLampList.at(i)->reinstateMemento(currentLamp);
+                mScene->removeItem(mLampList.at(i));
+                mLampList.replace(i,lamp);
+
+                mScene->addItem(lamp);
+                update();
             }
         }
     }
