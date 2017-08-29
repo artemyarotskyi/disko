@@ -64,6 +64,7 @@ void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     mOldX = mX;
     mOldY = mY;
+    mOldAngle = mAngle;
 
     if(event->button() == Qt::LeftButton)
     {
@@ -86,7 +87,10 @@ void Lamp::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QAbstractGraphicsShapeItem::mouseReleaseEvent(event);
 
     if((mOldX != mX) && (mOldY != mY))
-        emit lampMoveOrRotate(this);
+        emit lampMove(this);
+
+    if(mOldAngle != mAngle)
+        emit lampRotate(this);
 }
 
 void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -95,7 +99,7 @@ void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     {
         if(event->modifiers() == Qt::ShiftModifier)
         {
-            rotateItem(this, mInitialCenter, event->scenePos(), mInitialPos);
+            rotateItem(this, mInitialCenter, event->scenePos(), mInitialPos);            
             event->accept();
         }
         else

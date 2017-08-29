@@ -49,6 +49,7 @@ protected slots:
     void redo();
 
     void moveLampChanges(Lamp *lamp);
+    void rotateLampChanges(Lamp *lamp);
     void changeLampLightSize(Lamp *lamp);
 
     void setMessageVisibleToFalse();

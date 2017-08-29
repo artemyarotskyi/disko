@@ -82,8 +82,9 @@ void MainWindow::createCamera()
     mScene->addItem(lamp);
 
     connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-    connect(lamp, SIGNAL(lampMoveOrRotate(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+    connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
     connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
+    connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
 
     mCameraId++;
 
@@ -253,8 +254,9 @@ void MainWindow::undo()
                 lamp->setBrush(Qt::black);
 
                 connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-                connect(lamp, SIGNAL(lampMoveOrRotate(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+                connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
                 connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
+                connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
                 //setLampProperties(lamp, lmp);
 
                 //
@@ -296,6 +298,11 @@ void MainWindow::moveLampChanges(Lamp* lamp)
     mUndoStack.push_back(*lamp->createMemento());
 }
 
+void MainWindow::rotateLampChanges(Lamp *lamp)
+{
+    mUndoStack.push_back(*lamp->createMemento());
+}
+
 void MainWindow::changeLampLightSize(Lamp *lamp)
 {
     mUndoStack.push_back(*lamp->createMemento());
@@ -308,6 +315,7 @@ void MainWindow::setMessageVisibleToFalse()
 
 void MainWindow::setLampProperties(Lamp *lamp, Lamp lmp)
 {
+    // do property Lamp *lamp
     lamp->setLampXCoordinate(lmp.lampXCoordinate());
     lamp->setLampYCoordinate(lmp.lampYCoordinate());
     lamp->setX(lamp->lampXCoordinate());
@@ -404,8 +412,9 @@ void MainWindow::read(const QJsonObject &json)
         lamp->setBrush(Qt::black);
 
         connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-        connect(lamp, SIGNAL(lampMoveOrRotate(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+        connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
         connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
+        connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
         //setLampProperties(lamp, lmp);
 
         mUndoStack.push_back(*lamp->createMemento());

@@ -59,7 +59,8 @@ public:
 
 signals:
     void clickCamera(int);
-    void lampMoveOrRotate(Lamp*);
+    void lampMove(Lamp*);
+    void lampRotate(Lamp*);
     void lampLightSizeChange(Lamp*);
 
 protected slots:
@@ -80,6 +81,7 @@ private:
 
     qreal mOldX;
     qreal mOldY;
+    qreal mOldAngle;
 
     LampLight *mLampLight;
 
