@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QScrollBar>
 #include "CommonUiControllers/TableButton.h"
+#include <algorithm>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -216,8 +217,8 @@ void MainWindow::undo()
         Memento lastOperation = mUndoStack.pop();
         mRedoStack.push_back(lastOperation);
 
-        // remove from scene
-        for(int i = 0; i < mLampList.size(); ++i)
+        //remove from scene
+        for(int i = mLampList.size()-1; i >= 0; --i)
         {
             if(mLampList.at(i)->lampId() == lastOperation.id())
             {
@@ -225,45 +226,49 @@ void MainWindow::undo()
                 update();
             }
         }
-        //
 
-        if(!mUndoStack.isEmpty())
+        for(auto pos = mUndoStack.rbegin(); pos!=mUndoStack.rend(); ++pos)
         {
-            Memento memento = mUndoStack.pop();
-            mUndoStack.push_back(memento);
-            //
-            Lamp lmp;
-            lmp.reinstateMemento(memento);
-
-            Lamp *lamp = new Lamp(0,0,lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(), lmp.lampLightWidth(), lmp.lampLightHeight());
-
-            lamp->setLampXCoordinate(lmp.lampXCoordinate());
-            lamp->setLampYCoordinate(lmp.lampYCoordinate());
-            lamp->setX(lamp->lampXCoordinate());
-            lamp->setY(lamp->lampYCoordinate());
-
-            lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
-            lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
-            lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
-
-            lampRotation(lamp, lmp.lampAngle());
-
-            lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-            lamp->setBrush(Qt::black);
-
-            connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-            //
-            for(int i = 0; i < mLampList.size(); ++i)
+            int id = pos->id();
+            if(id == lastOperation.id())
             {
-                if(mLampList.at(i)->lampId() == lamp->lampId())
-                {
-                    mScene->removeItem(mLampList.at(i));
-                    mLampList.replace(i,lamp);
+                Memento memento = *pos;
 
-                    mScene->addItem(lamp);                    
-                    update();
-                    break;
+                Lamp lmp;
+                lmp.reinstateMemento(memento);
+
+                Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
+                lamp->setLampXCoordinate(lmp.lampXCoordinate());
+                lamp->setLampYCoordinate(lmp.lampYCoordinate());
+                lamp->setX(lamp->lampXCoordinate());
+                lamp->setY(lamp->lampYCoordinate());
+
+                lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
+                lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
+                lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
+
+                lampRotation(lamp, lmp.lampAngle());
+
+                lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
+                lamp->setBrush(Qt::black);
+
+                connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
+                connect(lamp, SIGNAL(lampMoveOrRotate(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+                connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
+                //setLampProperties(lamp, lmp);
+
+                //
+                for(int i = mLampList.size()-1; i >= 0; --i)
+                {
+                    if(mLampList.at(i)->lampId() == lamp->lampId())
+                    {
+                        mLampList.replace(i,lamp);
+
+                        mScene->addItem(lamp);
+                        update();
+                    }
                 }
+                break;
             }
         }
     }
@@ -299,6 +304,27 @@ void MainWindow::changeLampLightSize(Lamp *lamp)
 void MainWindow::setMessageVisibleToFalse()
 {
     ui->lblMessage->setVisible(false);
+}
+
+void MainWindow::setLampProperties(Lamp *lamp, Lamp lmp)
+{
+    lamp->setLampXCoordinate(lmp.lampXCoordinate());
+    lamp->setLampYCoordinate(lmp.lampYCoordinate());
+    lamp->setX(lamp->lampXCoordinate());
+    lamp->setY(lamp->lampYCoordinate());
+
+    lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
+    lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
+    lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
+
+    lampRotation(lamp, lmp.lampAngle());
+
+    lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
+    lamp->setBrush(Qt::black);
+
+    connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
+    connect(lamp, SIGNAL(lampMoveOrRotate(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+    connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
 }
 
 void MainWindow::loadRoomList(const QJsonObject &json)
@@ -363,7 +389,6 @@ void MainWindow::read(const QJsonObject &json)
         lmp.read(lampObject);
 
         Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-
         lamp->setLampXCoordinate(lmp.lampXCoordinate());
         lamp->setLampYCoordinate(lmp.lampYCoordinate());
         lamp->setX(lamp->lampXCoordinate());
@@ -378,9 +403,13 @@ void MainWindow::read(const QJsonObject &json)
         lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
         lamp->setBrush(Qt::black);
 
+        connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
+        connect(lamp, SIGNAL(lampMoveOrRotate(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+        connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
+        //setLampProperties(lamp, lmp);
+
         mUndoStack.push_back(*lamp->createMemento());
 
-        connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
         mCameraId = mCurrentCameraId + 1;
 
         mLampList.append(lamp);

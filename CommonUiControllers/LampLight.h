@@ -18,7 +18,7 @@ class LampLight :public QObject, public QGraphicsItem
     Q_OBJECT
 public:
     LampLight(QGraphicsRectItem *parent = 0, qreal width = 42, qreal height = 40);   
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*) override;    
 
     qreal lightWidth() const;
     void setLightWidth(qreal width);

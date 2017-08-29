@@ -21,6 +21,8 @@ class Lamp : public QObject, public QGraphicsRectItem
 public:
     Lamp(qreal x, qreal y, qreal width, qreal height, int id, qreal lightWidth = 42, qreal lightHeight = 40);
     Lamp();
+//    Lamp(const Lamp&)=default;
+//    Lamp& operator=(const Lamp&)=default;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
