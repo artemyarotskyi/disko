@@ -103,7 +103,7 @@ void MainWindow::deleteCamera(int id)
                 mUndoStack.push_back(*mLampList.at(i)->createMemento());
 
                 mScene->removeItem(mLampList.at(i));
-                mLampList.removeAt(i);
+                //mLampList.removeAt(i);
                 mCurrentCameraId = 0;                
                 break;
             }
@@ -259,6 +259,72 @@ void MainWindow::undo()
                 connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
                 //setLampProperties(lamp, lmp);
 
+                auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
+                                             [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
+                if(findLamp != mLampList.end())
+                {
+                    *findLamp = lamp;
+                    mScene->addItem(lamp);
+                    update();
+                }
+                else
+                {
+                    mLampList.append(lamp);
+                }
+                break;
+            }
+        }
+    }
+}
+
+void MainWindow::redo()
+{
+    if(!mRedoStack.isEmpty())
+    {
+        Memento lastOperation = mRedoStack.pop();
+        mUndoStack.push_back(lastOperation);
+
+        //remove from scene
+        for(int i = mLampList.size()-1; i >= 0; --i)
+        {
+            if(mLampList.at(i)->lampId() == lastOperation.id())
+            {
+                mScene->removeItem(mLampList.at(i));
+                update();
+            }
+        }
+
+        for(auto pos = mRedoStack.rbegin(); pos!=mRedoStack.rend(); ++pos)
+        {
+            int id = pos->id();
+            if(id == lastOperation.id())
+            {
+                Memento memento = *pos;
+
+                Lamp lmp;
+                lmp.reinstateMemento(memento);
+
+                Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
+                lamp->setLampXCoordinate(lmp.lampXCoordinate());
+                lamp->setLampYCoordinate(lmp.lampYCoordinate());
+                lamp->setX(lamp->lampXCoordinate());
+                lamp->setY(lamp->lampYCoordinate());
+
+                lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
+                lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
+                lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
+
+                lampRotation(lamp, lmp.lampAngle());
+
+                lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
+                lamp->setBrush(Qt::black);
+
+                connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
+                connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+                connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
+                connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
+                //setLampProperties(lamp, lmp);
+
                 //
                 for(int i = mLampList.size()-1; i >= 0; --i)
                 {
@@ -271,23 +337,6 @@ void MainWindow::undo()
                     }
                 }
                 break;
-            }
-        }
-    }
-}
-
-void MainWindow::redo()
-{
-    if(!mRedoStack.isEmpty())
-    {
-        Memento currentLamp = mRedoStack.pop();
-        mUndoStack.push_back(currentLamp);
-
-        for(int i = 0; i < mLampList.size(); ++i)
-        {
-            if(mLampList.at(i)->lampId() == currentLamp.id())
-            {
-                mLampList.at(i)->reinstateMemento(currentLamp);
             }
         }
     }
