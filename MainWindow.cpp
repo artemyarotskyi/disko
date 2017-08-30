@@ -218,15 +218,11 @@ void MainWindow::undo()
         Memento lastOperation = mUndoStack.pop();
         mRedoStack.push_back(lastOperation);
 
-        //remove from scene
-        for(int i = mLampList.size()-1; i >= 0; --i)
-        {
-            if(mLampList.at(i)->lampId() == lastOperation.id())
-            {
-                mScene->removeItem(mLampList.at(i));
-                update();
-            }
-        }
+        //remove lamp from scene
+        auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),
+                                         [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
+        mScene->removeItem(*lampToRemove);
+        update();
 
         for(auto pos = mUndoStack.rbegin(); pos!=mUndoStack.rend(); ++pos)
         {
