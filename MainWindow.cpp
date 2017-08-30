@@ -282,63 +282,61 @@ void MainWindow::redo()
         Memento lastOperation = mRedoStack.pop();
         mUndoStack.push_back(lastOperation);
 
-        //remove from scene
-        for(int i = mLampList.size()-1; i >= 0; --i)
+        auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),
+                                         [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
+        mScene->removeItem(*lampToRemove);
+        update();
+
+        //        for(auto pos = mRedoStack.rbegin(); pos!=mRedoStack.rend(); ++pos) // do not entered
+        //        {
+        //            int id = pos->id();
+        //            if(id == lastOperation.id())
+        //            {
+        //                Memento memento = *pos;
+
+        Lamp lmp;
+        lmp.reinstateMemento(lastOperation/*memento*/);
+
+        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
+        lamp->setLampXCoordinate(lmp.lampXCoordinate());
+        lamp->setLampYCoordinate(lmp.lampYCoordinate());
+        lamp->setX(lamp->lampXCoordinate());
+        lamp->setY(lamp->lampYCoordinate());
+
+        lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
+        lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
+        lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
+
+        lampRotation(lamp, lmp.lampAngle());
+
+        lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
+        lamp->setBrush(Qt::black);
+
+        connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
+        connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+        connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
+        connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
+        //setLampProperties(lamp, lmp);
+
+        auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
+                                     [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
+        if(findLamp != mLampList.end())
         {
-            if(mLampList.at(i)->lampId() == lastOperation.id())
-            {
-                mScene->removeItem(mLampList.at(i));
-                update();
-            }
+            *findLamp = lamp;
+            mScene->addItem(lamp);
+            update();
         }
-
-        for(auto pos = mRedoStack.rbegin(); pos!=mRedoStack.rend(); ++pos)
+        else
         {
-            int id = pos->id();
-            if(id == lastOperation.id())
-            {
-                Memento memento = *pos;
-
-                Lamp lmp;
-                lmp.reinstateMemento(memento);
-
-                Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-                lamp->setLampXCoordinate(lmp.lampXCoordinate());
-                lamp->setLampYCoordinate(lmp.lampYCoordinate());
-                lamp->setX(lamp->lampXCoordinate());
-                lamp->setY(lamp->lampYCoordinate());
-
-                lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
-                lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
-                lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
-
-                lampRotation(lamp, lmp.lampAngle());
-
-                lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-                lamp->setBrush(Qt::black);
-
-                connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-                connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
-                connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
-                connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
-                //setLampProperties(lamp, lmp);
-
-                //
-                for(int i = mLampList.size()-1; i >= 0; --i)
-                {
-                    if(mLampList.at(i)->lampId() == lamp->lampId())
-                    {
-                        mLampList.replace(i,lamp);
-
-                        mScene->addItem(lamp);
-                        update();
-                    }
-                }
-                break;
-            }
+            mLampList.append(lamp);
+            mScene->addItem(lamp);
+            update();
         }
+        //break;
     }
 }
+//    }
+//}
 
 void MainWindow::moveLampChanges(Lamp* lamp)
 {
