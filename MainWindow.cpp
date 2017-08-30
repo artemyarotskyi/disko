@@ -224,8 +224,11 @@ void MainWindow::undo()
         //remove lamp from scene
         auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),
                                          [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
-        mScene->removeItem(*lampToRemove);
-        update();
+        if(lampToRemove != mLampList.rend())
+        {
+            mScene->removeItem(*lampToRemove);
+            update();
+        }
 
         for(auto pos = mUndoStack.rbegin(); pos!=mUndoStack.rend(); ++pos)
         {
@@ -238,25 +241,7 @@ void MainWindow::undo()
                 lmp.reinstateMemento(memento);
 
                 Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-                lamp->setLampXCoordinate(lmp.lampXCoordinate());
-                lamp->setLampYCoordinate(lmp.lampYCoordinate());
-                lamp->setX(lamp->lampXCoordinate());
-                lamp->setY(lamp->lampYCoordinate());
-
-                lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
-                lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
-                lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
-
-                lampRotation(lamp, lmp.lampAngle());
-
-                lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-                lamp->setBrush(Qt::black);
-
-                connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-                connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
-                connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
-                connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
-                //setLampProperties(lamp, lmp);
+                setLampProperties(lamp, lmp);
 
                 auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                              [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
@@ -287,32 +272,17 @@ void MainWindow::redo()
 
         auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),
                                          [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
-        mScene->removeItem(*lampToRemove);
-        update();
+        if(lampToRemove != mLampList.rend())
+        {
+            mScene->removeItem(*lampToRemove);
+            update();
+        }
 
         Lamp lmp;
         lmp.reinstateMemento(lastOperation);
 
-        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-        lamp->setLampXCoordinate(lmp.lampXCoordinate());
-        lamp->setLampYCoordinate(lmp.lampYCoordinate());
-        lamp->setX(lamp->lampXCoordinate());
-        lamp->setY(lamp->lampYCoordinate());
-
-        lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
-        lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
-        lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
-
-        lampRotation(lamp, lmp.lampAngle());
-
-        lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-        lamp->setBrush(Qt::black);
-
-        connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-        connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
-        connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
-        connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
-        //setLampProperties(lamp, lmp);
+        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());        
+        setLampProperties(lamp, lmp);
 
         auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                      [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
@@ -354,9 +324,8 @@ void MainWindow::setMessageVisibleToFalse()
     ui->lblMessage->setVisible(false);
 }
 
-void MainWindow::setLampProperties(Lamp *lamp, Lamp lmp)
-{
-    // do property Lamp *lamp
+void MainWindow::setLampProperties(Lamp *lamp, Lamp &lmp)
+{    
     lamp->setLampXCoordinate(lmp.lampXCoordinate());
     lamp->setLampYCoordinate(lmp.lampYCoordinate());
     lamp->setX(lamp->lampXCoordinate());
@@ -372,8 +341,9 @@ void MainWindow::setLampProperties(Lamp *lamp, Lamp lmp)
     lamp->setBrush(Qt::black);
 
     connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-    connect(lamp, SIGNAL(lampMoveOrRotate(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+    connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
     connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
+    connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
 }
 
 void MainWindow::loadRoomList(const QJsonObject &json)
@@ -437,26 +407,8 @@ void MainWindow::read(const QJsonObject &json)
         Lamp lmp;
         lmp.read(lampObject);
 
-        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-        lamp->setLampXCoordinate(lmp.lampXCoordinate());
-        lamp->setLampYCoordinate(lmp.lampYCoordinate());
-        lamp->setX(lamp->lampXCoordinate());
-        lamp->setY(lamp->lampYCoordinate());
-
-        lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
-        lamp->lampLight()->setLightHeight(lmp.lampLightHeight());
-        lamp->lampLight()->setLampLightColor(lmp.lampLightColor());
-
-        lampRotation(lamp, lmp.lampAngle());
-
-        lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-        lamp->setBrush(Qt::black);
-
-        connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-        connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
-        connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
-        connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
-        //setLampProperties(lamp, lmp);
+        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());        
+        setLampProperties(lamp, lmp);
 
         mUndoStack.push_back(*lamp->createMemento());
 
