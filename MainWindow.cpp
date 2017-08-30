@@ -78,6 +78,7 @@ void MainWindow::createCamera()
     lamp->setBrush(Qt::black);
     mLampList.append(lamp);
     mUndoStack.push_back(*lamp->createMemento());
+    mRedoStack.clear();
 
     mScene->addItem(lamp);
 
@@ -101,6 +102,7 @@ void MainWindow::deleteCamera(int id)
             if(mLampList.at(i)->lampId() == id)
             {
                 mUndoStack.push_back(*mLampList.at(i)->createMemento());
+                mRedoStack.clear();
 
                 mScene->removeItem(mLampList.at(i));
                 mLampList.removeAt(i);
@@ -131,6 +133,7 @@ void MainWindow::setColorForCurrentLampLight(int id)
                     update();
 
                     mUndoStack.push_back(*lamp->createMemento());
+                    mRedoStack.clear();
                 }
                 break;
             }
@@ -287,15 +290,8 @@ void MainWindow::redo()
         mScene->removeItem(*lampToRemove);
         update();
 
-        //        for(auto pos = mRedoStack.rbegin(); pos!=mRedoStack.rend(); ++pos) // do not entered
-        //        {
-        //            int id = pos->id();
-        //            if(id == lastOperation.id())
-        //            {
-        //                Memento memento = *pos;
-
         Lamp lmp;
-        lmp.reinstateMemento(lastOperation/*memento*/);
+        lmp.reinstateMemento(lastOperation);
 
         Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
         lamp->setLampXCoordinate(lmp.lampXCoordinate());
@@ -332,25 +328,25 @@ void MainWindow::redo()
             mScene->addItem(lamp);
             update();
         }
-        //break;
     }
 }
-//    }
-//}
 
 void MainWindow::moveLampChanges(Lamp* lamp)
 {
     mUndoStack.push_back(*lamp->createMemento());
+    mRedoStack.clear();
 }
 
 void MainWindow::rotateLampChanges(Lamp *lamp)
 {
     mUndoStack.push_back(*lamp->createMemento());
+    mRedoStack.clear();
 }
 
 void MainWindow::changeLampLightSize(Lamp *lamp)
 {
     mUndoStack.push_back(*lamp->createMemento());
+    mRedoStack.clear();
 }
 
 void MainWindow::setMessageVisibleToFalse()
