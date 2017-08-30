@@ -103,7 +103,7 @@ void MainWindow::deleteCamera(int id)
                 mUndoStack.push_back(*mLampList.at(i)->createMemento());
 
                 mScene->removeItem(mLampList.at(i));
-                //mLampList.removeAt(i);
+                mLampList.removeAt(i);
                 mCurrentCameraId = 0;                
                 break;
             }
@@ -266,6 +266,8 @@ void MainWindow::undo()
                 else
                 {
                     mLampList.append(lamp);
+                    mScene->addItem(lamp);
+                    update();
                 }
                 break;
             }
