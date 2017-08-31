@@ -69,7 +69,9 @@ void MainWindow::deleteRoom()
 void MainWindow::clearRoom()
 {
     mScene->clear();
-    mLampList.clear();   
+    mLampList.clear();
+    mUndoStack.clear();
+    mRedoStack.clear();
 }
 
 void MainWindow::createCamera()
@@ -175,6 +177,9 @@ void MainWindow::loadRoom(int row, int)
     ui->btnUpdateRoom->setEnabled(true);
 
     OutputMessage(mLoadRoomMessage);
+
+    mUndoStack.clear();
+    mRedoStack.clear();
 }
 
 void MainWindow::deleteRoomFromeDb(int id)
