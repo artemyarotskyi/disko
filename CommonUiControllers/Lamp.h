@@ -54,6 +54,9 @@ public:
 
     QColor lampLightColor() const;
 
+    void setLampIsDeleted(bool lampIsDeleted);
+    bool lampIsDeleted() const;
+
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
@@ -84,6 +87,8 @@ private:
     qreal mOldAngle;
 
     LampLight *mLampLight;
+
+    bool mIsDeleted;
 
     int mZindex;
 };

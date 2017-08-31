@@ -31,8 +31,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    mLampList.clear();
     delete ui;
-    delete mScene;
+    delete mScene;    
 }
 
 void MainWindow::createRoom()
@@ -101,6 +102,7 @@ void MainWindow::deleteCamera(int id)
         {
             if(mLampList.at(i)->lampId() == id)
             {
+                mLampList.at(i)->setLampIsDeleted(true);
                 mUndoStack.push_back(*mLampList.at(i)->createMemento());
                 mRedoStack.clear();
 
@@ -221,7 +223,6 @@ void MainWindow::undo()
         Memento lastOperation = mUndoStack.pop();
         mRedoStack.push_back(lastOperation);
 
-        //remove lamp from scene
         auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),
                                          [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
         if(lampToRemove != mLampList.rend())
@@ -270,33 +271,32 @@ void MainWindow::redo()
         Memento lastOperation = mRedoStack.pop();
         mUndoStack.push_back(lastOperation);
 
-        auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),
+        auto findLamp = std::find_if(mLampList.rbegin(), mLampList.rend(),
                                          [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
-        if(lampToRemove != mLampList.rend())
-        {
-            mScene->removeItem(*lampToRemove);
-            update();
-        }
+
+        mScene->removeItem(*findLamp);
+        update();
 
         Lamp lmp;
         lmp.reinstateMemento(lastOperation);
 
-        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());        
+        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
         setLampProperties(lamp, lmp);
 
-        auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
-                                     [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
-        if(findLamp != mLampList.end())
+        if(!lastOperation.isDeleted())
         {
-            *findLamp = lamp;
-            mScene->addItem(lamp);
-            update();
-        }
-        else
-        {
-            mLampList.append(lamp);
-            mScene->addItem(lamp);
-            update();
+            if(findLamp != mLampList.rend())
+            {
+                *findLamp = lamp;
+                mScene->addItem(lamp);
+                update();
+            }
+            else
+            {
+                mLampList.append(lamp);
+                mScene->addItem(lamp);
+                update();
+            }
         }
     }
 }
@@ -330,6 +330,8 @@ void MainWindow::setLampProperties(Lamp *lamp, Lamp &lmp)
     lamp->setLampYCoordinate(lmp.lampYCoordinate());
     lamp->setX(lamp->lampXCoordinate());
     lamp->setY(lamp->lampYCoordinate());
+
+    lamp->setLampIsDeleted(lmp.lampIsDeleted());
 
     lamp->lampLight()->setLightWidth(lmp.lampLightWidth());
     lamp->lampLight()->setLightHeight(lmp.lampLightHeight());

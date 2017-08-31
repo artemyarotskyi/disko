@@ -42,7 +42,8 @@ Lamp::Lamp(qreal x, qreal y, qreal width, qreal height, int id, qreal lightWidth
     mHeight(height),
     mAngle(0),
     mLampLight(new LampLight(this, lightWidth, lightHeight)),
-    mZindex(0)
+    mZindex(0),
+    mIsDeleted(false)
 {
     mInitialPos.setX(0.0);
     mInitialPos.setY(0.0);
@@ -123,7 +124,7 @@ void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 Memento* Lamp::createMemento()
 {    
     return new Memento(mLampId, mX, mY, mWidth, mHeight, mAngle,
-                       mLampLight->lightColor(), mLampLight->lightWidth(), mLampLight->lightHeight());
+                       mLampLight->lightColor(), mLampLight->lightWidth(), mLampLight->lightHeight(), mIsDeleted);
 }
 
 void Lamp::reinstateMemento(Memento memento)
@@ -138,6 +139,8 @@ void Lamp::reinstateMemento(Memento memento)
      mLampLight->setLampLightColor(memento.mLampLightColor);
      mLampLight->setLightWidth(memento.mLampLightWidth);
      mLampLight->setLightHeight(memento.mLampLightHeight);
+
+     mIsDeleted = memento.mLampIsDeleted;
 }
 
 qreal Lamp::lampXCoordinate() const
@@ -213,6 +216,16 @@ qreal Lamp::lampLightHeight() const
 QColor Lamp::lampLightColor() const
 {
     return mLampLight->lightColor();
+}
+
+void Lamp::setLampIsDeleted(bool isDeleted)
+{
+    mIsDeleted = isDeleted;
+}
+
+bool Lamp::lampIsDeleted() const
+{
+    return mIsDeleted;
 }
 
 void Lamp::read(const QJsonObject &json)

@@ -10,9 +10,10 @@ class Memento
 {
 public:
     Memento(int id, qreal x, qreal y, qreal width, qreal height, qreal angle,
-            QColor lampLightColor, qreal lampLightWidth, qreal lampLightHeight);
+            QColor lampLightColor, qreal lampLightWidth, qreal lampLightHeight, bool lampIsDeleted);
     Memento();
-    int id();
+    int id();    
+    bool isDeleted();
 
 private:
     friend class Lamp;
@@ -27,6 +28,8 @@ private:
     QColor mLampLightColor;
     qreal mLampLightWidth;
     qreal mLampLightHeight;
+
+    bool mLampIsDeleted;
 
 
 };
