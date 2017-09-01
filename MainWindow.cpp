@@ -33,7 +33,7 @@ MainWindow::~MainWindow()
 {
     mLampList.clear();
     ui->tblViewRooms->clear();
-    mScene->clear();
+    //mScene->clear();
     delete mScene;
     delete ui;
 }
@@ -50,11 +50,11 @@ void MainWindow::createRoom()
         ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
 
         OutputMessage(mCreateRoomMessage);
-    }
 
-    SetUiElementsState(true, false, true,
-                       true, false, false,
-                       true, true, false, false);
+        SetUiElementsState(true, false, true,
+                           true, false, false,
+                           true, true, false, false);
+    }    
 }
 
 void MainWindow::deleteRoom()
@@ -69,6 +69,7 @@ void MainWindow::deleteRoom()
 
         mUndoStack.clear();
         mRedoStack.clear();
+        mLoadStack.clear();
     }
 }
 
@@ -185,9 +186,6 @@ void MainWindow::loadRoom(int row, int)
     ui->btnUndo->setEnabled(true);
 
     OutputMessage(mLoadRoomMessage);
-
-    mUndoStack.clear();
-    mRedoStack.clear();
 }
 
 void MainWindow::deleteRoomFromeDb(int id)
@@ -231,15 +229,18 @@ void MainWindow::zoomOut()
 
 void MainWindow::undo()
 {
+    int idForLoadStack;
     if(!mUndoStack.isEmpty())
     {
         Memento lastOperation = mUndoStack.pop();
         mRedoStack.push_back(lastOperation);
 
+        idForLoadStack = lastOperation.id();
+
         auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),
                                          [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
-        if(lampToRemove != mLampList.rend())
-        {
+        if(lampToRemove != mLampList.rend()) // add if( lamp is delete)
+        {            
             mScene->removeItem(*lampToRemove);
             update();
         }
@@ -261,6 +262,40 @@ void MainWindow::undo()
                                              [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
                 if(findLamp != mLampList.end())
                 {
+                    *findLamp = lamp;
+                    mScene->addItem(lamp);
+                    update();
+                }
+                else
+                {
+                    mLampList.append(lamp);
+                    mScene->addItem(lamp);
+                    update();
+                }
+                break;
+            }
+        }
+    }
+
+    if(!mLoadStack.isEmpty() && mUndoStack.isEmpty())
+    {
+        for(auto loadlamp = mLoadStack.begin(); loadlamp!= mLoadStack.end(); ++loadlamp)
+        {
+            Memento memento = *loadlamp;
+
+            if(idForLoadStack == memento.id())
+            {
+                Lamp lmp;
+                lmp.reinstateMemento(memento);
+
+                Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
+                setLampProperties(lamp, lmp);
+
+                auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
+                                             [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
+                if(findLamp != mLampList.end())
+                {
+                    mScene->removeItem(*findLamp);
                     *findLamp = lamp;
                     mScene->addItem(lamp);
                     update();
@@ -338,7 +373,7 @@ void MainWindow::setMessageVisibleToFalse()
 }
 
 void MainWindow::setLampProperties(Lamp *lamp, Lamp &lmp)
-{    
+{
     lamp->setLampXCoordinate(lmp.lampXCoordinate());
     lamp->setLampYCoordinate(lmp.lampYCoordinate());
     lamp->setX(lamp->lampXCoordinate());
@@ -409,10 +444,12 @@ void MainWindow::read(const QJsonObject &json)
         Lamp lmp;
         lmp.read(lampObject);
 
-        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());        
+        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
         setLampProperties(lamp, lmp);
 
-        mUndoStack.push_back(*lamp->createMemento());
+        lamp->setLampIsDeleted(false);
+
+        mLoadStack.push_back(*lamp->createMemento());
 
         mCameraId = mCurrentCameraId + 1;
 
@@ -524,5 +561,4 @@ void MainWindow::SetUiElementsState(bool saveRoom, bool updateRoom,bool clearRoo
     ui->btnZoomMinus->setEnabled(zoomM);
     ui->btnUndo->setEnabled(undo);
     ui->btnRedo->setEnabled(redo);
-
 }

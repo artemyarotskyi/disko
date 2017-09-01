@@ -76,6 +76,7 @@ protected slots:
 
     QStack<Memento> mUndoStack;
     QStack<Memento> mRedoStack;
+    QStack<Memento> mLoadStack;
 
     int mCameraId;
     int mCurrentCameraId;
