@@ -32,13 +32,15 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     mLampList.clear();
+    ui->tblViewRooms->clear();
+    mScene->clear();
+    delete mScene;
     delete ui;
-    delete mScene;    
 }
 
 void MainWindow::createRoom()
 {
-    deleteRoom();
+    deleteRoom();    
 
     if(mScene == nullptr)
     {
@@ -60,9 +62,13 @@ void MainWindow::deleteRoom()
     if(mScene != nullptr)
     {
         mLampList.clear();
+
         mScene->clear();
         mScene = nullptr;
-        delete mScene;        
+        delete mScene;
+
+        mUndoStack.clear();
+        mRedoStack.clear();
     }
 }
 
@@ -161,9 +167,9 @@ void MainWindow::saveRoom()
     loadRoomList(mRepository->GetAllRooms());
 
     ui->btnUpdateRoom->setEnabled(true);
-
-    OutputMessage(mSaveRoomMesssage);
     ui->btnSaveRoom->setEnabled(true);
+
+    OutputMessage(mSaveRoomMesssage);    
 }
 
 void MainWindow::loadRoom(int row, int)
@@ -175,6 +181,8 @@ void MainWindow::loadRoom(int row, int)
     read(mRepository->GetCurrentRoom(mCurrentRoomId));
 
     ui->btnUpdateRoom->setEnabled(true);
+    ui->btnRedo->setEnabled(true);
+    ui->btnUndo->setEnabled(true);
 
     OutputMessage(mLoadRoomMessage);
 
@@ -364,23 +372,10 @@ void MainWindow::loadRoomList(const QJsonObject &json)
 
         mCurrentRoomId = subtree.value("id").toString().toInt(); // for update room after save
 
-        // add delete room button to room list
-        QWidget* pWidget = new QWidget();
-        TableButton* btnDeleteRoom = new TableButton(mCurrentRoomId);
-        btnDeleteRoom->setText("x");
-        connect(btnDeleteRoom, SIGNAL(clickTableButton(int)), this, SLOT(deleteRoomFromeDb(int)));
-
-        QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
-        pLayout->addWidget(btnDeleteRoom);
-        pLayout->setAlignment(Qt::AlignCenter);
-        pLayout->setContentsMargins(0, 0, 2, 0);
-        pWidget->setLayout(pLayout);
-        //
-
         ui->tblViewRooms->insertRow(ui->tblViewRooms->rowCount());
         ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 0, new QTableWidgetItem(subtree.value("roomName").toString()));
         ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 1, new QTableWidgetItem(subtree.value("id").toString()));
-        ui->tblViewRooms->setCellWidget(roomIndex, 2,pWidget );
+        ui->tblViewRooms->setCellWidget(roomIndex, 2, addDeleteRoomButtonToRoomList());
     }
 }
 
@@ -440,6 +435,22 @@ void MainWindow::write(QJsonObject &json)
     mSceneName = ui->txtRoomName->text();
     json["roomName"] = mSceneName;
     json["lamps"] = lampArray;
+}
+
+QWidget* MainWindow::addDeleteRoomButtonToRoomList()
+{
+    QWidget* pWidget = new QWidget();
+    TableButton* btnDeleteRoom = new TableButton(mCurrentRoomId);
+    btnDeleteRoom->setText("x");
+    connect(btnDeleteRoom, SIGNAL(clickTableButton(int)), this, SLOT(deleteRoomFromeDb(int)));
+
+    QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
+    pLayout->addWidget(btnDeleteRoom);
+    pLayout->setAlignment(Qt::AlignCenter);
+    pLayout->setContentsMargins(0, 0, 2, 0);
+    pWidget->setLayout(pLayout);
+
+    return pWidget;
 }
 
 void MainWindow::SubscribeToFormEvents()

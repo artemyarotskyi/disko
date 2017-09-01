@@ -62,6 +62,7 @@ protected slots:
     void read(const QJsonObject &json);
     void write(QJsonObject &json);
 
+    QWidget* addDeleteRoomButtonToRoomList();
     void SubscribeToFormEvents();
     void SetRoomsListTableWidgetOptions();
     void OutputMessage(QString message);
