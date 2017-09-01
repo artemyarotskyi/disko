@@ -41,6 +41,7 @@ private:
     virtual void mousePressEvent(QGraphicsSceneDragDropEvent *event);
     bool sceneEventFilter(QGraphicsItem *watched, QEvent *event) override;
 
+    void calculateLampLightNewPosition(QGraphicsSceneMouseEvent *mevent, CornerGrabber *corner);
     void setCornerPosition();
     void setLightCenterPosition();
     void adjustSize(int x, int y);    
@@ -69,6 +70,8 @@ private:
 
     CornerGrabber *mCorners[2];
 
+    const qreal mMinimumWidth = 28;
+    const qreal mMinimumHeight = 40;
 };
 
 #endif // LAMPLIGHT_H

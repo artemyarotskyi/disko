@@ -133,7 +133,7 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
             corner->setMouseState(CornerGrabber::kMouseReleased);
 
             if((mHeight != mOldHeight) || (mWidth != mOldWidth))
-                emit lightSizeChanged(); // if size change
+                emit lightSizeChanged();
         }
         break;
 
@@ -150,40 +150,7 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 
     if(corner->getMouseState() == CornerGrabber::kMouseMoving)
     {
-        qreal x = mevent->pos().x();
-        qreal y = mevent->pos().y();
-
-        int XaxisSign = 0;
-        int YaxisSign = 0;
-
-        XaxisSign = +1;
-        YaxisSign = -1;
-
-        int xMoved = corner->mouseDownX - x;
-        int yMoved = corner->mouseDownY - y;
-
-        int newWidth = mWidth + (XaxisSign * xMoved);
-        if(newWidth < 28)
-        {
-            newWidth = 28;
-        }
-
-        int newHeight = mHeight + (YaxisSign * yMoved);
-        if(newHeight < 40)
-        {
-            newHeight = 40;
-        }
-
-        int deltaWidth = newWidth - mWidth;
-        int deltaHeight = newHeight - mHeight;
-
-        adjustSize(deltaWidth, deltaHeight);
-
-        deltaWidth *= (-1);
-        deltaHeight *= (-1);
-
-        int newXpos = this->pos().x() + deltaWidth;
-        this->setPos(newXpos,this->pos().y());
+        calculateLampLightNewPosition(mevent, corner);
 
         setCornerPosition();
         setLightCenterPosition();
@@ -192,6 +159,44 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
     }
 
     return true;
+}
+
+void LampLight::calculateLampLightNewPosition(QGraphicsSceneMouseEvent *mevent, CornerGrabber *corner)
+{
+    qreal x = mevent->pos().x();
+    qreal y = mevent->pos().y();
+
+    int XaxisSign = 0;
+    int YaxisSign = 0;
+
+    XaxisSign = +1;
+    YaxisSign = -1;
+
+    int xMoved = corner->mouseDownX - x;
+    int yMoved = corner->mouseDownY - y;
+
+    int newWidth = mWidth + (XaxisSign * xMoved);
+    if(newWidth < mMinimumWidth)
+    {
+        newWidth = mMinimumWidth;
+    }
+
+    int newHeight = mHeight + (YaxisSign * yMoved);
+    if(newHeight < mMinimumHeight)
+    {
+        newHeight = mMinimumHeight;
+    }
+
+    int deltaWidth = newWidth - mWidth;
+    int deltaHeight = newHeight - mHeight;
+
+    adjustSize(deltaWidth, deltaHeight);
+
+    deltaWidth *= (-1);
+    deltaHeight *= (-1);
+
+    int newXpos = this->pos().x() + deltaWidth;
+    this->setPos(newXpos,this->pos().y());
 }
 
 void LampLight::setCornerPosition()

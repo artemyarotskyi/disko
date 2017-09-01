@@ -30,8 +30,6 @@ private:
     qreal mLampLightHeight;
 
     bool mLampIsDeleted;
-
-
 };
 
 #endif // MEMENTO_H
