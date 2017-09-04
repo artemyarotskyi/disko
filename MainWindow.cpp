@@ -487,7 +487,7 @@ void MainWindow::read(const QJsonObject &json)
 
         mLoadStack.push_back(*lamp->createMemento());
 
-        mCameraId = mCurrentCameraId + 1;
+        mCameraId =  lamp->lampId() + 1;
 
         mLampList.append(lamp);
         mScene->addItem(lamp);
