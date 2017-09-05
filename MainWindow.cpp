@@ -68,6 +68,7 @@ void MainWindow::deleteRoom()
         mScene = nullptr;
         delete mScene;
 
+        mCurrentCameraId = 0;
         mUndoStack.clear();
         mRedoStack.clear();
         mLoadStack.clear();
@@ -76,6 +77,7 @@ void MainWindow::deleteRoom()
 
 void MainWindow::clearRoom()
 {
+    mCurrentCameraId = 0;
     mScene->clear();
     mLampList.clear();
     mUndoStack.clear();
@@ -240,6 +242,7 @@ void MainWindow::undo()
 
         auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),
                                          [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
+
         if(lampToRemove != mLampList.rend())
         {
             mScene->removeItem(*lampToRemove);
@@ -262,6 +265,7 @@ void MainWindow::undo()
 
                 auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                              [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
+
                 if(findLamp != mLampList.end())
                 {
                     *findLamp = lamp;
@@ -293,6 +297,7 @@ void MainWindow::undo()
 
                     auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                                  [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
+
                     if(findLamp != mLampList.end())
                     {
                         mScene->removeItem(*findLamp);
@@ -311,7 +316,6 @@ void MainWindow::undo()
             }
 
         } else
-
             if(!mLoadStack.isEmpty() && mUndoStack.isEmpty())
             {
                 for(auto loadlamp = mLoadStack.begin(); loadlamp!= mLoadStack.end(); ++loadlamp)
@@ -366,11 +370,11 @@ void MainWindow::redo()
 
         Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
         setLampProperties(lamp, lmp);
-        (*findLamp)->setLampIsDeleted(true);   //
+        (*findLamp)->setLampIsDeleted(true);
 
         if(!lastOperation.isDeleted())
         {
-            lamp->setLampIsDeleted(false);  //
+            lamp->setLampIsDeleted(false);
 
             if(findLamp != mLampList.rend())
             {
