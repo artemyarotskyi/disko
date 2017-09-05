@@ -366,9 +366,12 @@ void MainWindow::redo()
 
         Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
         setLampProperties(lamp, lmp);
+        (*findLamp)->setLampIsDeleted(true);   //
 
         if(!lastOperation.isDeleted())
         {
+            lamp->setLampIsDeleted(false);  //
+
             if(findLamp != mLampList.rend())
             {
                 *findLamp = lamp;
@@ -500,9 +503,12 @@ void MainWindow::write(QJsonObject &json)
 
     foreach (const Lamp *lamp, mLampList)
     {
-        QJsonObject lampObject;
-        lamp->write(lampObject);
-        lampArray.append(lampObject);
+        if(!lamp->lampIsDeleted())
+        {
+            QJsonObject lampObject;
+            lamp->write(lampObject);
+            lampArray.append(lampObject);
+        }
     }
 
     mSceneName = ui->txtRoomName->text();
