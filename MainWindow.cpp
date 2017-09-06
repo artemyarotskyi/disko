@@ -162,8 +162,8 @@ void MainWindow::loadRoom(int row, int)
     deleteRoom();
     createRoom();
 
-    mCurrentRoomId = ui->tblViewRooms->item(row,1)->text().toInt();
-    read(mRepository->GetCurrentRoom(mCurrentRoomId));
+    mCurrentRoomId = ui->tblViewRooms->item(row,1)->text().toInt();   
+    restorRoom(read(mRepository->GetCurrentRoom(mCurrentRoomId)));
 
     setUpdateRoomAndUndoRedoButtonsState(true, true, true);
     outputMessage(mLoadRoomMessage);
@@ -444,15 +444,8 @@ void MainWindow::lampRotation(Lamp *lamp, qreal angle)
     lamp->setTransform(xForm, false);
 }
 
-void MainWindow::read(const QJsonObject &json)
+void MainWindow::restorRoom(QJsonArray lampArray)
 {
-    mLampList.clear();
-
-    mSceneName = json["roomName"].toString();
-    ui->txtRoomName->setText(mSceneName);
-
-    QJsonArray lampArray = json["lamps"].toArray();
-
     for(int lampIndex = 0; lampIndex < lampArray.size(); ++lampIndex)
     {
         QJsonObject lampObject = lampArray[lampIndex].toObject();
@@ -462,15 +455,25 @@ void MainWindow::read(const QJsonObject &json)
         Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
         setLampProperties(lamp, lmp);
 
-        lamp->setLampIsDeleted(false);
-
-        mLoadStack.push_back(*lamp->createMemento());
+        addLampToLoadStack(*lamp->createMemento());
 
         mCameraId =  lamp->lampId() + 1;
 
         mLampList.append(lamp);
         mScene->addItem(lamp);
     }
+}
+
+QJsonArray MainWindow::read(const QJsonObject &json)
+{
+    mLampList.clear();
+
+    mSceneName = json["roomName"].toString();
+    ui->txtRoomName->setText(mSceneName);
+
+    QJsonArray lampArray = json["lamps"].toArray();
+
+    return lampArray;
 }
 
 void MainWindow::write(QJsonObject &json)
@@ -545,6 +548,11 @@ bool MainWindow::isRoomIdValid(int id)
 bool MainWindow::isFindLampExist(int findLampId, int currentLampId)
 {
     return (findLampId == currentLampId);
+}
+
+void MainWindow::addLampToLoadStack(Memento memento)
+{
+    mLoadStack.push_back(memento);
 }
 
 void MainWindow::addLampToUndoStackAndClearRedoStack(Memento memento)

@@ -59,7 +59,8 @@ protected slots:
     void OutputRoomList(const QJsonObject &json);
     void lampRotation(Lamp *lamp, qreal angle);
 
-    void read(const QJsonObject &json);
+    void restorRoom(QJsonArray lampArray);
+    QJsonArray read(const QJsonObject &json);
     void write(QJsonObject &json);
 
     bool isSceneExist();
@@ -71,6 +72,7 @@ protected slots:
     bool isLampIdValid(int id);
     bool isRoomIdValid(int id);
     bool isFindLampExist(int findLampId, int currentLampId);
+    void addLampToLoadStack(Memento memento);
     void addLampToUndoStackAndClearRedoStack(Memento memento);
 
     QWidget* addDeleteRoomButtonToRoomList();
