@@ -55,7 +55,8 @@ protected slots:
     void setMessageVisibleToFalse();
 
  private:
-    void setLampProperties(Lamp *lamp, Lamp &lmp);
+    Lamp* createAndRestoreLamp(Lamp &lmp);
+    Lamp* createNewLamp();
     void OutputRoomList(const QJsonObject &json);
     void lampRotation(Lamp *lamp, qreal angle);
 

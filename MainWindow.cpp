@@ -76,18 +76,12 @@ void MainWindow::clearRoom()
 
 void MainWindow::createLamp()   // do refacting
 {
-    Lamp *lamp = new Lamp(0, 0, 53, 53, mCameraId);
-    lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-    lamp->setBrush(Qt::black);
-    mLampList.append(lamp);
-
-    addLampToUndoStackAndClearRedoStack(*lamp->createMemento());
-
-    mScene->addItem(lamp);
-
-    subscribeToLampEvents(lamp);
-
+    Lamp *lamp = createNewLamp();
     mCameraId++;
+
+    mLampList.append(lamp);
+    addLampToUndoStackAndClearRedoStack(*lamp->createMemento());
+    mScene->addItem(lamp);
 
     setUndoRedoButtonsState(true, true);
 }
@@ -238,8 +232,8 @@ void MainWindow::undo()
                 Lamp lmp;
                 lmp.reinstateMemento(memento);
 
-                Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-                setLampProperties(lamp, lmp);
+
+                Lamp *lamp = createAndRestoreLamp(lmp);
 
                 auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                              [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
@@ -270,8 +264,8 @@ void MainWindow::undo()
                     Lamp lmp;
                     lmp.reinstateMemento(memento);
 
-                    Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-                    setLampProperties(lamp, lmp);
+
+                    Lamp *lamp = createAndRestoreLamp(lmp);
 
                     auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                                  [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
@@ -305,8 +299,7 @@ void MainWindow::undo()
                         Lamp lmp;
                         lmp.reinstateMemento(memento);
 
-                        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-                        setLampProperties(lamp, lmp);
+                        Lamp *lamp =  createAndRestoreLamp(lmp);
 
                         auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                                      [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
@@ -346,8 +339,9 @@ void MainWindow::redo()
         Lamp lmp;
         lmp.reinstateMemento(lastOperation);
 
-        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-        setLampProperties(lamp, lmp);
+
+        Lamp *lamp = createAndRestoreLamp(lmp);
+
         (*findLamp)->setLampIsDeleted(true);
 
         if(!lastOperation.isDeleted())
@@ -390,8 +384,21 @@ void MainWindow::setMessageVisibleToFalse()
     ui->lblMessage->setVisible(false);
 }
 
-void MainWindow::setLampProperties(Lamp *lamp, Lamp &lmp)
+Lamp* MainWindow::createNewLamp()
 {
+    Lamp *lamp = new Lamp(0, 0, 53, 53, mCameraId);
+    lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
+    lamp->setBrush(Qt::black);
+
+    subscribeToLampEvents(lamp);
+
+    return lamp;
+}
+
+Lamp* MainWindow::createAndRestoreLamp(Lamp &lmp)
+{
+    Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
+
     lamp->setLampXCoordinate(lmp.lampXCoordinate());
     lamp->setLampYCoordinate(lmp.lampYCoordinate());
     lamp->setX(lamp->lampXCoordinate());
@@ -409,6 +416,8 @@ void MainWindow::setLampProperties(Lamp *lamp, Lamp &lmp)
     lamp->setBrush(Qt::black);
 
     subscribeToLampEvents(lamp);
+
+    return lamp;
 }
 
 void MainWindow::OutputRoomList(const QJsonObject &json)
@@ -452,8 +461,8 @@ void MainWindow::restorRoom(QJsonArray lampArray)
         Lamp lmp;
         lmp.read(lampObject);
 
-        Lamp *lamp = new Lamp(0, 0, lmp.lampWidth(), lmp.lampHeight(), lmp.lampId(),lmp.lampLightWidth(),lmp.lampLightHeight());
-        setLampProperties(lamp, lmp);
+        Lamp *lamp = createAndRestoreLamp(lmp);
+        lamp->setLampIsDeleted(false);
 
         addLampToLoadStack(*lamp->createMemento());
 
