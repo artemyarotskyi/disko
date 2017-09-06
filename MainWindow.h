@@ -32,8 +32,8 @@ protected slots:
     void deleteRoom();
     void clearRoom();
 
-    void createCamera();
-    void deleteCamera(int id);
+    void createLamp();
+    void deleteLamp(int id);
     void setColorForCurrentLampLight(int id);
     void setCurrentCameraId(int id);
 
@@ -56,17 +56,32 @@ protected slots:
 
  private:
     void setLampProperties(Lamp *lamp, Lamp &lmp);
-    void loadRoomList(const QJsonObject &json);
+    void OutputRoomList(const QJsonObject &json);
     void lampRotation(Lamp *lamp, qreal angle);
 
     void read(const QJsonObject &json);
     void write(QJsonObject &json);
 
+    bool isSceneExist();
+    void createScene();
+    void deleteScene();
+    void setRoomParameters();
+    void clearContainers();
+    void subscribeToLampEvents(Lamp *lamp);
+    bool isLampIdValid(int id);
+    bool isRoomIdValid(int id);
+    bool isFindLampExist(int findLampId, int currentLampId);
+    void addLampToUndoStackAndClearRedoStack(Memento memento);
+
     QWidget* addDeleteRoomButtonToRoomList();
-    void SubscribeToFormEvents();
-    void SetRoomsListTableWidgetOptions();
-    void OutputMessage(QString message);
-    void SetUiElementsState(bool saveRoom, bool updateRoom, bool clearRoom,
+    void subscribeToFormEvents();
+    void setRoomsListTableWidgetOptions();
+    void outputMessage(QString message);
+    void setColorAndDeleteLampButtonsState(bool color, bool deleteLamp);
+    void setUndoRedoButtonsState(bool undo, bool redo);
+    void setUpdateAndSaveRoomButtonsState(bool saveRoom, bool updateRoom);
+    void setUpdateRoomAndUndoRedoButtonsState(bool updateRoom, bool undo, bool redo);
+    void setUiElementsState(bool saveRoom, bool updateRoom, bool clearRoom,
                             bool addLamp, bool deleteLamp, bool color,
                             bool zoomP, bool zoomM, bool undo, bool redo);
 

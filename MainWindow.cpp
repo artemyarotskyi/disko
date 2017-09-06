@@ -21,20 +21,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsViewCurrentRoom->setScene(mScene);
     ui->lblMessage->setVisible(false);
 
-    SetRoomsListTableWidgetOptions();
-    SubscribeToFormEvents();
-    SetUiElementsState(false,false,false,
+    setRoomsListTableWidgetOptions();
+    subscribeToFormEvents();
+    setUiElementsState(false,false,false,
                        false,false,false,
                        false,false,false,false);
 
-    loadRoomList(mRepository->GetAllRooms());    
+    OutputRoomList(mRepository->GetAllRooms());
 }
 
 MainWindow::~MainWindow()
 {
     mLampList.clear();
-    ui->tblViewRooms->clear();
-    //mScene->clear();
+    ui->tblViewRooms->clear();    
     delete mScene;
     delete ui;
 }
@@ -43,16 +42,14 @@ void MainWindow::createRoom()
 {
     deleteRoom();    
 
-    if(mScene == nullptr)
+    if(isSceneExist())
     {
-        mScene = new QGraphicsScene(this);
-        ui->graphicsViewCurrentRoom->setScene(mScene);
-        ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
-        ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
+        createScene();
+        setRoomParameters();
 
-        OutputMessage(mCreateRoomMessage);
+        outputMessage(mCreateRoomMessage);
 
-        SetUiElementsState(true, false, true,
+        setUiElementsState(true, false, true,
                            true, false, false,
                            true, true, false, false);
     }    
@@ -60,84 +57,72 @@ void MainWindow::createRoom()
 
 void MainWindow::deleteRoom()
 {
-    if(mScene != nullptr)
+    if(!isSceneExist())
     {
-        mLampList.clear();
+        deleteScene();
+        clearContainers();
 
-        mScene->clear();
-        mScene = nullptr;
-        delete mScene;
-
-        mCurrentCameraId = 0;
-        mUndoStack.clear();
-        mRedoStack.clear();
-        mLoadStack.clear();
+        mCurrentCameraId = 0;        
     }
 }
 
 void MainWindow::clearRoom()
-{
-    mCurrentCameraId = 0;
+{    
     mScene->clear();
-    mLampList.clear();
-    mUndoStack.clear();
-    mRedoStack.clear();
+    clearContainers();
+
+    mCurrentCameraId = 0;
 }
 
-void MainWindow::createCamera()
+void MainWindow::createLamp()   // do refacting
 {
     Lamp *lamp = new Lamp(0, 0, 53, 53, mCameraId);
     lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
     lamp->setBrush(Qt::black);
     mLampList.append(lamp);
-    mUndoStack.push_back(*lamp->createMemento());
-    mRedoStack.clear();
+
+    addLampToUndoStackAndClearRedoStack(*lamp->createMemento());
 
     mScene->addItem(lamp);
 
-    connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-    connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
-    connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
-    connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
+    subscribeToLampEvents(lamp);
 
     mCameraId++;
 
-    ui->btnUndo->setEnabled(true);
-    ui->btnRedo->setEnabled(true);
+    setUndoRedoButtonsState(true, true);
 }
 
-void MainWindow::deleteCamera(int id)
+void MainWindow::deleteLamp(int id) //
 {
-    if(id !=0)
+    if(isLampIdValid(id))
     {
         for(int i = 0; i < mLampList.size(); ++i)
         {
-            if(mLampList.at(i)->lampId() == id)
+            if(isFindLampExist(mLampList.at(i)->lampId(), id))
             {
                 mLampList.at(i)->setLampIsDeleted(true);
-                mUndoStack.push_back(*mLampList.at(i)->createMemento());
-                mRedoStack.clear();
+
+                addLampToUndoStackAndClearRedoStack(*mLampList.at(i)->createMemento());
 
                 mScene->removeItem(mLampList.at(i));
                 mLampList.removeAt(i);
-                mCurrentCameraId = 0;                
+                mCurrentCameraId = 0;
                 break;
             }
         }
     }
 
-    ui->btnColor->setEnabled(false);
-    ui->btnDeleteLamp->setEnabled(false);
+    setColorAndDeleteLampButtonsState(false, false);
 }
 
 void MainWindow::setColorForCurrentLampLight(int id)
 {
-    if(id != 0)
+    if(isLampIdValid(id))
     {
         Lamp *lamp;
         for(int i = 0; i < mLampList.size(); ++i)
         {
-            if(mLampList.at(i)->lampId() == id)
+            if(isFindLampExist(mLampList.at(i)->lampId(), id))
             {
                 lamp = mLampList.at(i);
                 QColor color = QColorDialog::getColor(Qt::white, this, "Choose color");
@@ -146,8 +131,7 @@ void MainWindow::setColorForCurrentLampLight(int id)
                     lamp->lampLight()->setLampLightColor(color);
                     update();
 
-                    mUndoStack.push_back(*lamp->createMemento());
-                    mRedoStack.clear();
+                    addLampToUndoStackAndClearRedoStack(*lamp->createMemento());
                 }
                 break;
             }
@@ -158,8 +142,7 @@ void MainWindow::setColorForCurrentLampLight(int id)
 void MainWindow::setCurrentCameraId(int id)
 {
     mCurrentCameraId = id;
-    ui->btnColor->setEnabled(true);
-    ui->btnDeleteLamp->setEnabled(true);
+    setColorAndDeleteLampButtonsState(true, true);
 }
 
 void MainWindow::saveRoom()
@@ -168,12 +151,10 @@ void MainWindow::saveRoom()
     QJsonObject roomObject;
     write(roomObject);
     mRepository->SaveRoom(roomObject);
-    loadRoomList(mRepository->GetAllRooms());
+    OutputRoomList(mRepository->GetAllRooms());
 
-    ui->btnUpdateRoom->setEnabled(true);
-    ui->btnSaveRoom->setEnabled(true);
-
-    OutputMessage(mSaveRoomMesssage);    
+    setUpdateAndSaveRoomButtonsState(true, true);
+    outputMessage(mSaveRoomMesssage);
 }
 
 void MainWindow::loadRoom(int row, int)
@@ -184,28 +165,25 @@ void MainWindow::loadRoom(int row, int)
     mCurrentRoomId = ui->tblViewRooms->item(row,1)->text().toInt();
     read(mRepository->GetCurrentRoom(mCurrentRoomId));
 
-    ui->btnUpdateRoom->setEnabled(true);
-    ui->btnRedo->setEnabled(true);
-    ui->btnUndo->setEnabled(true);
-
-    OutputMessage(mLoadRoomMessage);
+    setUpdateRoomAndUndoRedoButtonsState(true, true, true);
+    outputMessage(mLoadRoomMessage);
 }
 
 void MainWindow::deleteRoomFromeDb(int id)
-{
-    if(mCurrentRoomId == id)
+{    
+    if(isRoomIdValid(id))
     {
         deleteRoom();
-        SetUiElementsState(false,false,false,
+        setUiElementsState(false,false,false,
                            false,false,false,
                            false,false,false,false);
 
     }
 
     mRepository->DeleteRoom(id);
-    loadRoomList(mRepository->GetAllRooms());
+    OutputRoomList(mRepository->GetAllRooms());
 
-    OutputMessage(mDeleteRoomMessage);
+    outputMessage(mDeleteRoomMessage);
 }
 
 void MainWindow::updateRoom()
@@ -214,9 +192,9 @@ void MainWindow::updateRoom()
     QJsonObject roomObject;
     write(roomObject);
     mRepository->UpdateRoom(roomObject, mCurrentRoomId);
-    loadRoomList(mRepository->GetAllRooms());
+    OutputRoomList(mRepository->GetAllRooms());
 
-    OutputMessage(mUpdateRoomMessage);
+    outputMessage(mUpdateRoomMessage);
     ui->btnUpdateRoom->setEnabled(true);
 }
 
@@ -394,20 +372,17 @@ void MainWindow::redo()
 
 void MainWindow::moveLampChanges(Lamp* lamp)
 {
-    mUndoStack.push_back(*lamp->createMemento());
-    mRedoStack.clear();
+    addLampToUndoStackAndClearRedoStack(*lamp->createMemento());
 }
 
 void MainWindow::rotateLampChanges(Lamp *lamp)
 {
-    mUndoStack.push_back(*lamp->createMemento());
-    mRedoStack.clear();
+    addLampToUndoStackAndClearRedoStack(*lamp->createMemento());
 }
 
 void MainWindow::changeLampLightSize(Lamp *lamp)
 {
-    mUndoStack.push_back(*lamp->createMemento());
-    mRedoStack.clear();
+    addLampToUndoStackAndClearRedoStack(*lamp->createMemento());
 }
 
 void MainWindow::setMessageVisibleToFalse()
@@ -433,13 +408,10 @@ void MainWindow::setLampProperties(Lamp *lamp, Lamp &lmp)
     lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
     lamp->setBrush(Qt::black);
 
-    connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
-    connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
-    connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
-    connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
+    subscribeToLampEvents(lamp);
 }
 
-void MainWindow::loadRoomList(const QJsonObject &json)
+void MainWindow::OutputRoomList(const QJsonObject &json)
 {
     ui->tblViewRooms->clearContents();
     ui->tblViewRooms->setRowCount(0);
@@ -520,6 +492,67 @@ void MainWindow::write(QJsonObject &json)
     json["lamps"] = lampArray;
 }
 
+bool MainWindow::isSceneExist()
+{
+    return (mScene == nullptr);
+}
+
+void MainWindow::createScene()
+{
+    mScene = new QGraphicsScene(this);
+}
+
+void MainWindow::deleteScene()
+{
+    mScene->clear();
+    mScene = nullptr;
+    delete mScene;
+}
+
+void MainWindow::setRoomParameters()
+{
+    ui->graphicsViewCurrentRoom->setScene(mScene);
+    ui->graphicsViewCurrentRoom->setSceneRect(0, 0, mWidth, mHeight);
+    ui->graphicsViewCurrentRoom->fitInView(0, 0,mWidth, mHeight, Qt::KeepAspectRatio);
+}
+
+void MainWindow::clearContainers()
+{
+    mLampList.clear();
+    mUndoStack.clear();
+    mRedoStack.clear();
+    mLoadStack.clear();
+}
+
+void MainWindow::subscribeToLampEvents(Lamp *lamp)
+{
+    connect(lamp, SIGNAL(clickCamera(int)), this, SLOT(setCurrentCameraId(int)));
+    connect(lamp, SIGNAL(lampMove(Lamp*)), this, SLOT(moveLampChanges(Lamp*)));
+    connect(lamp, SIGNAL(lampLightSizeChange(Lamp*)), this, SLOT(changeLampLightSize(Lamp*)));
+    connect(lamp, SIGNAL(lampRotate(Lamp*)), this, SLOT(rotateLampChanges(Lamp*)));
+}
+
+bool MainWindow::isLampIdValid(int id)
+{
+    return (id != 0);
+}
+
+bool MainWindow::isRoomIdValid(int id)
+{
+    return (mCurrentRoomId == id);
+}
+
+bool MainWindow::isFindLampExist(int findLampId, int currentLampId)
+{
+    return (findLampId == currentLampId);
+}
+
+void MainWindow::addLampToUndoStackAndClearRedoStack(Memento memento)
+{
+    mUndoStack.push_back(memento);
+    mRedoStack.clear();
+}
+
 QWidget* MainWindow::addDeleteRoomButtonToRoomList()
 {
     QWidget* pWidget = new QWidget();
@@ -536,10 +569,10 @@ QWidget* MainWindow::addDeleteRoomButtonToRoomList()
     return pWidget;
 }
 
-void MainWindow::SubscribeToFormEvents()
+void MainWindow::subscribeToFormEvents()
 {
     connect(ui->btnCreateNewRoom, SIGNAL(clicked()), this, SLOT(createRoom()));
-    connect(ui->btnAddLamp, SIGNAL(clicked()), this, SLOT(createCamera()));
+    connect(ui->btnAddLamp, SIGNAL(clicked()), this, SLOT(createLamp()));
     connect(ui->btnClearRoom, SIGNAL(clicked()), this, SLOT(clearRoom()));
 
     connect(ui->btnSaveRoom, SIGNAL(clicked()), this, SLOT(saveRoom()));
@@ -547,7 +580,7 @@ void MainWindow::SubscribeToFormEvents()
     connect(ui->btnUpdateRoom, SIGNAL(clicked()), this, SLOT(updateRoom()));
 
     connect(ui->btnColor, &QPushButton::clicked, this, [=]{setColorForCurrentLampLight(mCurrentCameraId);});
-    connect(ui->btnDeleteLamp, &QPushButton::clicked, this, [=]{deleteCamera(mCurrentCameraId);});
+    connect(ui->btnDeleteLamp, &QPushButton::clicked, this, [=]{deleteLamp(mCurrentCameraId);});
 
     connect(ui->btnZoomPlus, SIGNAL(clicked(bool)), this, SLOT(zoomIn()));
     connect(ui->btnZoomMinus, SIGNAL(clicked(bool)), this, SLOT(zoomOut()));
@@ -556,7 +589,7 @@ void MainWindow::SubscribeToFormEvents()
     connect(ui->btnUndo, SIGNAL(clicked(bool)), this, SLOT(undo()));
 }
 
-void MainWindow::SetRoomsListTableWidgetOptions()
+void MainWindow::setRoomsListTableWidgetOptions()
 {   
     ui->tblViewRooms->setColumnCount(3);
     ui->tblViewRooms->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
@@ -584,14 +617,38 @@ void MainWindow::SetRoomsListTableWidgetOptions()
                                                          "}");
 }
 
-void MainWindow::OutputMessage(QString message)
+void MainWindow::outputMessage(QString message)
 {
     ui->lblMessage->setText(message);
     ui->lblMessage->setVisible(true);
     QTimer::singleShot(1500,this,SLOT(setMessageVisibleToFalse()));
 }
 
-void MainWindow::SetUiElementsState(bool saveRoom, bool updateRoom,bool clearRoom,
+void MainWindow::setColorAndDeleteLampButtonsState(bool color, bool deleteLamp)
+{
+    ui->btnColor->setEnabled(color);
+    ui->btnDeleteLamp->setEnabled(deleteLamp);
+}
+
+void MainWindow::setUndoRedoButtonsState(bool undo, bool redo)
+{
+    ui->btnUndo->setEnabled(undo);
+    ui->btnRedo->setEnabled(redo);
+}
+
+void MainWindow::setUpdateAndSaveRoomButtonsState(bool saveRoom, bool updateRoom)
+{
+    ui->btnSaveRoom->setEnabled(saveRoom);
+    ui->btnUpdateRoom->setEnabled(updateRoom);
+}
+
+void MainWindow::setUpdateRoomAndUndoRedoButtonsState(bool updateRoom, bool undo, bool redo)
+{
+    ui->btnUpdateRoom->setEnabled(updateRoom);
+    setUndoRedoButtonsState(undo, redo);
+}
+
+void MainWindow::setUiElementsState(bool saveRoom, bool updateRoom,bool clearRoom,
                                     bool addLamp, bool deleteLamp, bool color,
                                     bool zoomP, bool zoomM, bool undo, bool redo)
 {
