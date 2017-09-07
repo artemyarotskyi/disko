@@ -60,6 +60,7 @@ protected slots:
     void updateFindLamp(QList<Lamp*>::iterator findLamp, Lamp* lamp);
     void addFindLamp(Lamp* lamp);
     void addNewOrUpdateLamp(QList<Lamp*>::iterator findLamp, Lamp *lamp, bool removeLamp);
+    void setPreviousStateToLamp(QList<Lamp*>::iterator findLamp, Memento lastOperation, bool removeLamp);
     void OutputRoomList(const QJsonObject &json);
     void lampRotation(Lamp *lamp, qreal angle);
 

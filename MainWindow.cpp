@@ -278,13 +278,7 @@ void MainWindow::redo()
 
         if(!lastOperation.isDeleted())
         {
-            Lamp lmp;
-            lmp.reinstateMemento(lastOperation);
-
-            Lamp *lamp = createAndRestoreLamp(lmp);
-            lamp->setLampIsDeleted(false);
-
-            addNewOrUpdateLamp(findLamp, lamp, false);
+            setPreviousStateToLamp(findLamp, lastOperation, false);
         }
     }
 }
@@ -346,6 +340,17 @@ void MainWindow::addNewOrUpdateLamp(QList<Lamp*>::iterator findLamp, Lamp *lamp,
     {
         addFindLamp(lamp);
     }
+}
+
+void MainWindow::setPreviousStateToLamp(QList<Lamp*>::iterator findLamp, Memento lastOperation, bool removeLamp)
+{
+    Lamp lmp;
+    lmp.reinstateMemento(lastOperation);
+
+    Lamp *lamp = createAndRestoreLamp(lmp);
+    lamp->setLampIsDeleted(false);
+
+    addNewOrUpdateLamp(findLamp, lamp, removeLamp);
 }
 
 Lamp* MainWindow::createAndRestoreLamp(Lamp &lmp)
