@@ -59,6 +59,7 @@ protected slots:
     Lamp* createNewLamp();
     void updateFindLamp(QList<Lamp*>::iterator findLamp, Lamp* lamp);
     void addFindLamp(Lamp* lamp);
+    void addNewOrUpdateLamp(QList<Lamp*>::iterator findLamp, Lamp *lamp, bool removeLamp);
     void OutputRoomList(const QJsonObject &json);
     void lampRotation(Lamp *lamp, qreal angle);
 
@@ -73,8 +74,10 @@ protected slots:
     void clearContainers();
     void subscribeToLampEvents(Lamp *lamp);
     bool isLampIdValid(int id);
-    bool isRoomIdValid(int id);
+    bool isRoomIdValid(int id);    
+    bool isFindLampNotExist(QStack<Memento>::reverse_iterator findLamp);
     bool isFindLampExist(QList<Lamp*>::iterator findLamp);
+    bool isFindLampExist(QList<Lamp*>::reverse_iterator lampToRemove);
     bool isFindLampExist(int findLampId, int currentLampId);
     Memento getLastOperation(QStack<Memento> &fromStack, QStack<Memento> &toStack);
     void addLampToLoadStack(Memento memento);
