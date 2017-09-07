@@ -205,50 +205,45 @@ void MainWindow::zoomOut()
 void MainWindow::undo()
 {
     int idForLoadStack;
-    if(!mUndoStack.isEmpty())//
+    if(!mUndoStack.isEmpty())
     {
-        Memento lastOperation = mUndoStack.pop();//
-        mRedoStack.push_back(lastOperation);//
+        Memento lastOperation = mUndoStack.pop();
+        mRedoStack.push_back(lastOperation);
 
         idForLoadStack = lastOperation.id();
 
-        auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),//
+        auto lampToRemove = std::find_if(mLampList.rbegin(), mLampList.rend(),
                                          [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
 
         if(lampToRemove != mLampList.rend())
         {
-            mScene->removeItem(*lampToRemove);//
+            mScene->removeItem(*lampToRemove);
             (*lampToRemove)->setLampIsDeleted(true);
             update();//
         }
 
         QStack<Memento>::reverse_iterator pos;
         for(pos = mUndoStack.rbegin(); pos!=mUndoStack.rend(); ++pos)
-        {
-            int id = pos->id();
-            if(id == lastOperation.id())
+        {            
+            if(idForLoadStack == pos->id())
             {
                 Memento memento = *pos;
 
                 Lamp lmp;//
-                lmp.reinstateMemento(memento);//
+                lmp.reinstateMemento(memento);
 
-                Lamp *lamp = createAndRestoreLamp(lmp);//
+                Lamp *lamp = createAndRestoreLamp(lmp);
 
                 auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                              [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
 
-                if(findLamp != mLampList.end())//
+                if(isFindLampExist(findLamp))
                 {
-                    *findLamp = lamp;//
-                    mScene->addItem(lamp);//
-                    update();//
+                    updateFindLamp(findLamp,lamp);
                 }
-                else//
+                else
                 {
-                    mLampList.append(lamp);//
-                    mScene->addItem(lamp);//
-                    update();//
+                    addFindLamp(lamp);
                 }
                 break;
             }
@@ -257,10 +252,10 @@ void MainWindow::undo()
         {
             for(auto loadlamp = mLoadStack.begin(); loadlamp!= mLoadStack.end(); ++loadlamp)
             {
-                Memento memento = *loadlamp;
-
-                if(idForLoadStack == memento.id())
+                if(idForLoadStack == loadlamp->id())
                 {
+                    Memento memento = *loadlamp;
+
                     Lamp lmp;
                     lmp.reinstateMemento(memento);
 
@@ -269,18 +264,14 @@ void MainWindow::undo()
                     auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),//
                                                  [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
 
-                    if(findLamp != mLampList.end())
+                    if(isFindLampExist(findLamp))
                     {
                         mScene->removeItem(*findLamp);
-                        *findLamp = lamp;
-                        mScene->addItem(lamp);
-                        update();
+                        updateFindLamp(findLamp,lamp);
                     }
                     else
                     {
-                        mLampList.append(lamp);
-                        mScene->addItem(lamp);
-                        update();
+                        addFindLamp(lamp);
                     }
                     break;
                 }
@@ -294,37 +285,31 @@ void MainWindow::redo()
 {
     if(!mRedoStack.isEmpty())
     {
-        Memento lastOperation = mRedoStack.pop();
-        mUndoStack.push_back(lastOperation);
+        Memento lastOperation = mRedoStack.pop(); ////
+        mUndoStack.push_back(lastOperation); ////
 
-        auto findLamp = std::find_if(mLampList.rbegin(), mLampList.rend(),
+        auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                          [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
 
         mScene->removeItem(*findLamp);
-        update();
-
-        Lamp lmp;
-        lmp.reinstateMemento(lastOperation);
-
-        Lamp *lamp = createAndRestoreLamp(lmp);
-
         (*findLamp)->setLampIsDeleted(true);
+        update();
 
         if(!lastOperation.isDeleted())
         {
+            Lamp lmp;
+            lmp.reinstateMemento(lastOperation);
+
+            Lamp *lamp = createAndRestoreLamp(lmp);
             lamp->setLampIsDeleted(false);
 
-            if(findLamp != mLampList.rend())
+            if(isFindLampExist(findLamp))
             {
-                *findLamp = lamp;
-                mScene->addItem(lamp);
-                update();
+                updateFindLamp(findLamp,lamp);
             }
             else
             {
-                mLampList.append(lamp);
-                mScene->addItem(lamp);
-                update();
+                addFindLamp(lamp);
             }
         }
     }
@@ -359,6 +344,20 @@ Lamp* MainWindow::createNewLamp()
     subscribeToLampEvents(lamp);
 
     return lamp;
+}
+
+void MainWindow::updateFindLamp(QList<Lamp*>::iterator findLamp, Lamp *lamp)
+{
+    *findLamp = lamp;
+    mScene->addItem(lamp);
+    update();
+}
+
+void MainWindow::addFindLamp(Lamp *lamp)
+{
+    mLampList.append(lamp);
+    mScene->addItem(lamp);
+    update();
 }
 
 Lamp* MainWindow::createAndRestoreLamp(Lamp &lmp)
@@ -518,6 +517,11 @@ bool MainWindow::isLampIdValid(int id)
 bool MainWindow::isRoomIdValid(int id)
 {
     return (mCurrentRoomId == id);
+}
+
+bool MainWindow::isFindLampExist(QList<Lamp*>::iterator findLamp)
+{
+    return (findLamp != mLampList.end());
 }
 
 bool MainWindow::isFindLampExist(int findLampId, int currentLampId)

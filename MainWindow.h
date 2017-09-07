@@ -57,6 +57,8 @@ protected slots:
  private:
     Lamp* createAndRestoreLamp(Lamp &lmp);
     Lamp* createNewLamp();
+    void updateFindLamp(QList<Lamp*>::iterator findLamp, Lamp* lamp);
+    void addFindLamp(Lamp* lamp);
     void OutputRoomList(const QJsonObject &json);
     void lampRotation(Lamp *lamp, qreal angle);
 
@@ -72,6 +74,7 @@ protected slots:
     void subscribeToLampEvents(Lamp *lamp);
     bool isLampIdValid(int id);
     bool isRoomIdValid(int id);
+    bool isFindLampExist(QList<Lamp*>::iterator findLamp);
     bool isFindLampExist(int findLampId, int currentLampId);
     void addLampToLoadStack(Memento memento);
     void addLampToUndoStackAndClearRedoStack(Memento memento);
