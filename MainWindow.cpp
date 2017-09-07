@@ -207,8 +207,7 @@ void MainWindow::undo()
     int idForLoadStack;
     if(!mUndoStack.isEmpty())
     {
-        Memento lastOperation = mUndoStack.pop();
-        mRedoStack.push_back(lastOperation);
+        Memento lastOperation = getLastOperation(mUndoStack, mRedoStack);
 
         idForLoadStack = lastOperation.id();
 
@@ -217,9 +216,7 @@ void MainWindow::undo()
 
         if(lampToRemove != mLampList.rend())
         {
-            mScene->removeItem(*lampToRemove);
-            (*lampToRemove)->setLampIsDeleted(true);
-            update();//
+            removeLampFromScene(lampToRemove);
         }
 
         QStack<Memento>::reverse_iterator pos;
@@ -276,7 +273,6 @@ void MainWindow::undo()
                     break;
                 }
             }
-
         }
     }
 }
@@ -285,15 +281,12 @@ void MainWindow::redo()
 {
     if(!mRedoStack.isEmpty())
     {
-        Memento lastOperation = mRedoStack.pop(); ////
-        mUndoStack.push_back(lastOperation); ////
+        Memento lastOperation = getLastOperation(mRedoStack, mUndoStack);
 
         auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
                                          [&lastOperation](Lamp *l){ return l->lampId() == lastOperation.id();});
 
-        mScene->removeItem(*findLamp);
-        (*findLamp)->setLampIsDeleted(true);
-        update();
+        removeLampFromScene(findLamp);
 
         if(!lastOperation.isDeleted())
         {
@@ -529,6 +522,13 @@ bool MainWindow::isFindLampExist(int findLampId, int currentLampId)
     return (findLampId == currentLampId);
 }
 
+Memento MainWindow::getLastOperation(QStack<Memento> &fromStack, QStack<Memento> &toStack)
+{
+    Memento lastOperation = fromStack.pop();
+    toStack.push_back(lastOperation);
+    return lastOperation;
+}
+
 void MainWindow::addLampToLoadStack(Memento memento)
 {
     mLoadStack.push_back(memento);
@@ -538,6 +538,20 @@ void MainWindow::addLampToUndoStackAndClearRedoStack(Memento memento)
 {
     mUndoStack.push_back(memento);
     mRedoStack.clear();
+}
+
+void MainWindow::removeLampFromScene(QList<Lamp*>::reverse_iterator lampToRemove)
+{
+    mScene->removeItem(*lampToRemove);
+    (*lampToRemove)->setLampIsDeleted(true);
+    update();
+}
+
+void MainWindow::removeLampFromScene(QList<Lamp*>::iterator lampToRemove)
+{
+    mScene->removeItem(*lampToRemove);
+    (*lampToRemove)->setLampIsDeleted(true);
+    update();
 }
 
 QWidget* MainWindow::addDeleteRoomButtonToRoomList()

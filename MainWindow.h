@@ -76,8 +76,11 @@ protected slots:
     bool isRoomIdValid(int id);
     bool isFindLampExist(QList<Lamp*>::iterator findLamp);
     bool isFindLampExist(int findLampId, int currentLampId);
+    Memento getLastOperation(QStack<Memento> &fromStack, QStack<Memento> &toStack);
     void addLampToLoadStack(Memento memento);
     void addLampToUndoStackAndClearRedoStack(Memento memento);
+    void removeLampFromScene(QList<Lamp*>::reverse_iterator lampToRemove); // reverse iterator
+    void removeLampFromScene(QList<Lamp*>::iterator lampToRemove); // iterator
 
     QWidget* addDeleteRoomButtonToRoomList();
     void subscribeToFormEvents();
