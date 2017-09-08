@@ -44,7 +44,13 @@ private:
     void calculateLampLightNewPosition(QGraphicsSceneMouseEvent *mevent, CornerGrabber *corner);
     void setCornerPosition();
     void setLightCenterPosition();
-    void adjustSize(int x, int y);    
+    void adjustSize(int x, int y);
+    bool isHeightChange();
+    bool isWidthChange();
+    bool isCornerGrabberNotExist(CornerGrabber *corner);
+    bool isGraphicsSceneMouseEventNotExist(QGraphicsSceneMouseEvent *mevent);
+    bool isMinimumWidth(int newWidth);
+    bool isMinimumHeight(int newHeight);
 
     QColor mOutterBorderColor;
     QPen mOutterBorderPen;

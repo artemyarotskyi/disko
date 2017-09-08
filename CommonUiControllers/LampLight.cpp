@@ -104,13 +104,13 @@ void LampLight::mousePressEvent(QGraphicsSceneDragDropEvent *event)
 bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 {
     CornerGrabber *corner = dynamic_cast<CornerGrabber*>(watched);
-    if(corner == nullptr)
+    if(isCornerGrabberNotExist(corner))
     {
         return false;
     }
 
     QGraphicsSceneMouseEvent *mevent = dynamic_cast<QGraphicsSceneMouseEvent*>(event);
-    if(mevent == nullptr)
+    if(isGraphicsSceneMouseEventNotExist(mevent))
     {
         return false;
     }
@@ -132,7 +132,7 @@ bool LampLight::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
         {
             corner->setMouseState(CornerGrabber::kMouseReleased);
 
-            if((mHeight != mOldHeight) || (mWidth != mOldWidth))
+            if(isHeightChange()||isWidthChange())
                 emit lightSizeChanged();
         }
         break;
@@ -176,13 +176,13 @@ void LampLight::calculateLampLightNewPosition(QGraphicsSceneMouseEvent *mevent, 
     int yMoved = corner->mouseDownY - y;
 
     int newWidth = mWidth + (XaxisSign * xMoved);
-    if(newWidth < mMinimumWidth)
+    if(isMinimumWidth(newWidth))
     {
         newWidth = mMinimumWidth;
     }
 
     int newHeight = mHeight + (YaxisSign * yMoved);
-    if(newHeight < mMinimumHeight)
+    if(isMinimumHeight(newHeight))
     {
         newHeight = mMinimumHeight;
     }
@@ -216,4 +216,34 @@ void LampLight::adjustSize(int x, int y)
 
     mDrawingWidth = mWidth - mXCornerGrabBuffer;
     mDrawingHeight = mHeight - mYCornerGrabBuffer;
+}
+
+bool LampLight::isHeightChange()
+{
+    return (mHeight != mOldHeight);
+}
+
+bool LampLight::isWidthChange()
+{
+    return (mWidth != mOldWidth);
+}
+
+bool LampLight::isCornerGrabberNotExist(CornerGrabber *corner)
+{
+    return (corner == nullptr);
+}
+
+bool LampLight::isGraphicsSceneMouseEventNotExist(QGraphicsSceneMouseEvent *mevent)
+{
+    return (mevent == nullptr);
+}
+
+bool LampLight::isMinimumWidth(int newWidth)
+{
+    return (newWidth < mMinimumWidth);
+}
+
+bool LampLight::isMinimumHeight(int newHeight)
+{
+    return (newHeight < mMinimumHeight);
 }
