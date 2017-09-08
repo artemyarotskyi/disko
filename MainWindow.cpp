@@ -224,7 +224,7 @@ void MainWindow::undo()
         {
             if(isFindLampExist(lampToUpdate->id(), idForLoadStack))
             {
-                setPreviousStateToLamp(lampToUpdate, false);
+                setLampToPreviousState(lampToUpdate, false);
                 break;
             }
         }
@@ -235,7 +235,7 @@ void MainWindow::undo()
             {
                 if(isFindLampExist(loadlamp->id(), idForLoadStack))
                 {
-                    setPreviousStateToLamp(loadlamp, true);
+                    setLampToPreviousState(loadlamp, true);
                     break;
                 }
             }
@@ -256,7 +256,7 @@ void MainWindow::redo()
 
         if(!lastOperation.isDeleted())
         {
-            setPreviousStateToLamp(findLamp, lastOperation, false);
+            setLampToPreviousState(findLamp, lastOperation, false);
         }
     }
 }
@@ -320,25 +320,20 @@ void MainWindow::addNewOrUpdateLamp(QList<Lamp*>::iterator findLamp, Lamp *lamp,
     }
 }
 
-void MainWindow::setPreviousStateToLamp(QStack<Memento>::reverse_iterator lampToUpdate, bool removeLamp)
+void MainWindow::setLampToPreviousState(QStack<Memento>::reverse_iterator lampToUpdate, bool removeLamp)
 {
     Memento memento = *lampToUpdate;
-
-    Lamp lmp;
-    lmp.reinstateMemento(memento);
-
-    Lamp *lamp = createAndRestoreLamp(lmp);
-
-    auto findLamp = std::find_if(mLampList.begin(), mLampList.end(),
-                                 [lamp](Lamp *l){return l->lampId() == lamp->lampId();});
-
-    addNewOrUpdateLamp(findLamp,lamp,removeLamp);
+    crteateLampWithPreviousState(memento, removeLamp);
 }
 
-void MainWindow::setPreviousStateToLamp(QStack<Memento>::iterator loadLamp, bool removeLamp)
+void MainWindow::setLampToPreviousState(QStack<Memento>::iterator loadLamp, bool removeLamp)
 {
     Memento memento = *loadLamp;
+    crteateLampWithPreviousState(memento, removeLamp);
+}
 
+void MainWindow::crteateLampWithPreviousState(Memento memento, bool removeLamp)
+{
     Lamp lmp;
     lmp.reinstateMemento(memento);
 
@@ -350,7 +345,7 @@ void MainWindow::setPreviousStateToLamp(QStack<Memento>::iterator loadLamp, bool
     addNewOrUpdateLamp(findLamp, lamp, removeLamp);
 }
 
-void MainWindow::setPreviousStateToLamp(QList<Lamp*>::iterator findLamp, Memento lastOperation, bool removeLamp)
+void MainWindow::setLampToPreviousState(QList<Lamp*>::iterator findLamp, Memento lastOperation, bool removeLamp)
 {
     Lamp lmp;
     lmp.reinstateMemento(lastOperation);
