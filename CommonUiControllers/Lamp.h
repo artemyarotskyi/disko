@@ -21,8 +21,6 @@ class Lamp : public QObject, public QGraphicsRectItem
 public:
     Lamp(qreal x, qreal y, qreal width, qreal height, int id, qreal lightWidth = 42, qreal lightHeight = 40);
     Lamp();
-//    Lamp(const Lamp&)=default;
-//    Lamp& operator=(const Lamp&)=default;
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
@@ -67,10 +65,20 @@ signals:
     void lampLightSizeChange(Lamp*);
 
 protected slots:
-     void emitLampLightSizeChanges();
+    void emitLampLightSizeChanges();
 
 
 private:
+    bool isLeftButtonPressed(QGraphicsSceneMouseEvent *event);
+    bool isShiftPressed(QGraphicsSceneMouseEvent *event);
+    bool isLampMove();
+    bool isLampRotate();
+    bool isLampLocatedInBorder();
+    bool isLampLeftBorderCorrect();
+    bool isLampRightBorderCorrect();
+    bool isLampBottomBorderCorrect();
+    bool isLampTopBorderCorrect();
+
     QPointF mInitialPos;
     QPointF mInitialCenter;
 
@@ -90,6 +98,8 @@ private:
 
     bool mIsDeleted;
 
+    qreal mSceneWidth = 600;
+    qreal mSceneHeight = 520;
     int mZindex;
 };
 

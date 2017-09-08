@@ -67,11 +67,12 @@ void Lamp::mousePressEvent(QGraphicsSceneMouseEvent *event)
     mOldY = mY;
     mOldAngle = mAngle;
 
-    if(event->button() == Qt::LeftButton)
+    if(isLeftButtonPressed(event))
     {
         emit clickCamera(mLampId);
-        this->setZValue(++mZindex);        
-        if(event->modifiers() == Qt::ShiftModifier)
+        this->setZValue(++mZindex);
+
+        if(isShiftPressed(event))
         {
             mInitialPos = event->scenePos();
             mInitialCenter = this->sceneBoundingRect().normalized().center();
@@ -87,10 +88,10 @@ void Lamp::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QAbstractGraphicsShapeItem::mouseReleaseEvent(event);
 
-    if((mOldX != mX) || (mOldY != mY))
+    if(isLampMove())
         emit lampMove(this);
 
-    if(mOldAngle != mAngle)
+    if(isLampRotate())
         emit lampRotate(this);
 }
 
@@ -105,15 +106,15 @@ void Lamp::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         }
         else
         {
-            if((this->x() >= 0) && (this->y() >= 0) &&
-                    (this->x() + 53 <= 600) && (this->y() + 53 <= 520))
+
+            if(isLampLocatedInBorder())
             {
                 QAbstractGraphicsShapeItem::mouseMoveEvent(event);
             }
-            if(this->x() < 0) this->setX(1);
-            if(this->y() < 0) this->setY(1);
-            if(this->x() + 53 > 600) this->setX(600 - 54);
-            if(this->y() + 53 > 520) this->setY(520 - 54);
+            if(isLampLeftBorderCorrect()) this->setX(1);
+            if(isLampTopBorderCorrect()) this->setY(1);
+            if(isLampRightBorderCorrect()) this->setX(mSceneWidth - mWidth);
+            if(isLampBottomBorderCorrect()) this->setY(mSceneHeight - mHeight);
 
             mX = this->x();
             mY = this->y();
@@ -259,3 +260,50 @@ void Lamp::emitLampLightSizeChanges()
 {
     emit lampLightSizeChange(this);
 }
+
+bool Lamp::isLeftButtonPressed(QGraphicsSceneMouseEvent *event)
+{
+    return (event->button() == Qt::LeftButton);
+}
+
+bool Lamp::isShiftPressed(QGraphicsSceneMouseEvent *event)
+{
+    return (event->modifiers() == Qt::ShiftModifier);
+}
+
+bool Lamp::isLampMove()
+{
+    return ((mOldX != mX) || (mOldY != mY));
+}
+
+bool Lamp::isLampRotate()
+{
+    return (mOldAngle != mAngle);
+}
+
+bool Lamp::isLampLocatedInBorder()
+{
+    return ((this->x() >= 0) && (this->y() >= 0) &&
+            (this->x() + mWidth <= mSceneWidth) && (this->y() + mHeight <= mSceneHeight));
+}
+
+bool Lamp::isLampLeftBorderCorrect()
+{
+    return(this->x() < 0);
+}
+
+bool Lamp::isLampRightBorderCorrect()
+{
+    return(this->x() + mWidth > mSceneWidth);
+}
+
+bool Lamp::isLampBottomBorderCorrect()
+{
+    return(this->y() + mHeight > mSceneHeight);
+}
+
+bool Lamp::isLampTopBorderCorrect()
+{
+    return(this->y() < 0);
+}
+
