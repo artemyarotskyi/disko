@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->graphicsViewCurrentRoom->setScene(mScene);
-    ui->lblMessage->setVisible(false);
+    ui->messageWidget->setVisible(false);
 
     setRoomsListTableWidgetOptions();
     subscribeToFormEvents();
@@ -278,7 +278,7 @@ void MainWindow::changeLampLightSize(Lamp *lamp)
 
 void MainWindow::setMessageVisibleToFalse()
 {
-    ui->lblMessage->setVisible(false);
+    ui->messageWidget->setVisible(false);
 }
 
 Lamp* MainWindow::createNewLamp()
@@ -634,8 +634,8 @@ void MainWindow::setRoomsListTableWidgetOptions()
 void MainWindow::outputMessage(QString message)
 {
     ui->lblMessage->setText(message);
-    ui->lblMessage->setVisible(true);
-    QTimer::singleShot(1500,this,SLOT(setMessageVisibleToFalse()));
+    ui->messageWidget->setVisible(true);
+    QTimer::singleShot(2000,this,SLOT(setMessageVisibleToFalse()));
 }
 
 void MainWindow::setColorAndDeleteLampButtonsState(bool color, bool deleteLamp)
