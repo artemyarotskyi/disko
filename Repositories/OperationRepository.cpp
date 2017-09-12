@@ -26,7 +26,11 @@ void OperationRepository::SaveRoom(QJsonObject &room)
     query.bindValue(":roomContent",roomContent);
 
     if(!query.exec())
-        qDebug() << "Save room error:" << query.lastError();
+    {
+        QString lastError = "Save room error:" + query.lastError().text();
+        std::string error = lastError.toLocal8Bit().constData();
+        throw std::runtime_error(error);
+    }
 }
 
 void OperationRepository::UpdateRoom(QJsonObject &room, int id)
@@ -39,8 +43,13 @@ void OperationRepository::UpdateRoom(QJsonObject &room, int id)
     query.bindValue(":roomName", room["roomName"].toString());
     query.bindValue(":roomContent", roomContent);
     query.bindValue(":id", id);
+
     if(!query.exec())
-        qDebug() << "Update room error:" << query.lastError();
+    {
+        QString lastError = "Update room error:" + query.lastError().text();
+        std::string error = lastError.toLocal8Bit().constData();
+        throw std::runtime_error(error);
+    }
 }
 
 void OperationRepository::DeleteRoom(int id)
@@ -48,15 +57,24 @@ void OperationRepository::DeleteRoom(int id)
     QSqlQuery query;
     query.prepare(mDeleteRoomById);
     query.bindValue(":id", id);
+
     if(!query.exec())
-        qDebug() << "Delete room error:" << query.lastError();
+    {
+        QString lastError = "Delete room error:" + query.lastError().text();
+        std::string error = lastError.toLocal8Bit().constData();
+        throw std::runtime_error(error);
+    }
 }
 
 QJsonObject OperationRepository::GetAllRooms()
 {
     QSqlQuery query;
     if(!query.exec(mGetAllRooms))
-        qDebug() << "Get all rooms error:" << query.lastError();
+    {
+        QString lastError = "Get all rooms error:" + query.lastError().text();
+        std::string error = lastError.toLocal8Bit().constData();
+        throw std::runtime_error(error);
+    }
     else
     {        
         QJsonArray roomArray;
@@ -80,7 +98,11 @@ QJsonObject OperationRepository::GetCurrentRoom(int id)
     query.prepare(mGetRoomById);    
     query.bindValue(":id", id);
     if(!query.exec())
-        qDebug() << "Get room by id error:" << query.lastError();
+    {
+        QString lastError = "Get room by id error:" + query.lastError().text();
+        std::string error = lastError.toLocal8Bit().constData();
+        throw std::runtime_error(error);
+    }
     else
     {
         QJsonObject resultObject;

@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->graphicsViewCurrentRoom->setScene(mScene);
-    ui->messageWidget->setVisible(false);
+    ui->messageWidget->setVisible(false);  
 
     setRoomsListTableWidgetOptions();
     subscribeToFormEvents();
@@ -27,7 +27,14 @@ MainWindow::MainWindow(QWidget *parent) :
                        false,false,false,
                        false,false,false,false);
 
-    OutputRoomList(mRepository->GetAllRooms());
+    try
+    {
+        OutputRoomList(mRepository->GetAllRooms());
+    }
+    catch(const std::exception& e)
+    {
+        qDebug() <<e.what();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -74,7 +81,7 @@ void MainWindow::clearRoom()
     mCurrentCameraId = 0;
 }
 
-void MainWindow::createLamp()   // do refacting
+void MainWindow::createLamp()
 {
     Lamp *lamp = createNewLamp();
     mCameraId++;
@@ -86,7 +93,7 @@ void MainWindow::createLamp()   // do refacting
     setUndoRedoButtonsState(true, true);
 }
 
-void MainWindow::deleteLamp(int id) //
+void MainWindow::deleteLamp(int id)
 {
     if(isLampIdValid(id))
     {
@@ -144,7 +151,15 @@ void MainWindow::saveRoom()
     ui->btnSaveRoom->setEnabled(false);
     QJsonObject roomObject;
     write(roomObject);
-    mRepository->SaveRoom(roomObject);
+    try
+    {
+        mRepository->SaveRoom(roomObject);
+    }
+    catch(const std::exception& e)
+    {
+        qDebug() <<e.what();
+    }
+
     OutputRoomList(mRepository->GetAllRooms());
 
     setUpdateAndSaveRoomButtonsState(true, true);
@@ -156,8 +171,15 @@ void MainWindow::loadRoom(int row, int)
     deleteRoom();
     createRoom();
 
-    mCurrentRoomId = ui->tblViewRooms->item(row,1)->text().toInt();   
-    restorRoom(read(mRepository->GetCurrentRoom(mCurrentRoomId)));
+    mCurrentRoomId = ui->tblViewRooms->item(row,1)->text().toInt();
+    try
+    {
+        restorRoom(read(mRepository->GetCurrentRoom(mCurrentRoomId)));
+    }
+    catch(const std::exception& e)
+    {
+        qDebug() <<e.what();
+    }
 
     setUpdateRoomAndUndoRedoButtonsState(true, true, true);
     outputMessage(mLoadRoomMessage);
@@ -174,7 +196,15 @@ void MainWindow::deleteRoomFromeDb(int id)
 
     }
 
-    mRepository->DeleteRoom(id);
+    try
+    {
+        mRepository->DeleteRoom(id);
+    }
+    catch(const std::exception& e)
+    {
+        qDebug() <<e.what();
+    }
+
     OutputRoomList(mRepository->GetAllRooms());
 
     outputMessage(mDeleteRoomMessage);
@@ -185,7 +215,16 @@ void MainWindow::updateRoom()
     ui->btnUpdateRoom->setEnabled(false);
     QJsonObject roomObject;
     write(roomObject);
-    mRepository->UpdateRoom(roomObject, mCurrentRoomId);
+
+    try
+    {
+        mRepository->UpdateRoom(roomObject, mCurrentRoomId);
+    }
+    catch(const std::exception& e)
+    {
+        qDebug() <<e.what();
+    }
+
     OutputRoomList(mRepository->GetAllRooms());
 
     outputMessage(mUpdateRoomMessage);
