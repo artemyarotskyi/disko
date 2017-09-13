@@ -612,6 +612,23 @@ QWidget* MainWindow::addDeleteRoomButtonToRoomList()
     TableButton* btnDeleteRoom = new TableButton(mCurrentRoomId);
     btnDeleteRoom->setText("x");
     connect(btnDeleteRoom, SIGNAL(clickTableButton(int)), this, SLOT(deleteRoomFromeDb(int)));
+    btnDeleteRoom->setMinimumSize(38,29);
+    btnDeleteRoom->setObjectName("btnDeleteRoom");
+    btnDeleteRoom->setStyleSheet("QPushButton#btnDeleteRoom{"
+                                 "  border : none;"
+                                 "  color : #FFFFFF;"
+                                 "  background-color:#8E8D93;"
+                                 "}"
+
+                                 "QPushButton#btnDeleteRoom:hover{"
+                                 "  color:#910663;"
+                                 "}"
+
+                                 "QPushButton#btnDeleteRoom:pressed{"
+                                 "  color:#910663;"
+                                 "  border: 1px solid #910663;"
+                                 "}"
+                                 );
 
     QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
     pLayout->addWidget(btnDeleteRoom);
