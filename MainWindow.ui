@@ -239,6 +239,7 @@ QTableWidget#tblViewRooms::item:selected
 
 QTableWidget#tblViewRooms::item:hover
 {
+	background-color: #8E8D93;
 	color:#910663;	
 }
 </string>
@@ -721,9 +722,10 @@ QPushButton#btnRedo:disabled
 	padding-left:7px;
 }
 
-
-
-</string>
+QLineEdit#txtRoomName::selection
+{
+	color:#8E8D93;
+}</string>
     </property>
     <property name="text">
      <string>New Room</string>
