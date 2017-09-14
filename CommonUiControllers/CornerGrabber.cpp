@@ -4,7 +4,7 @@ CornerGrabber::CornerGrabber(QGraphicsItem *parent, int corner):
     QGraphicsItem(parent),
     mouseDownX(0),
     mouseDownY(0),
-    mOutterborderColor(Qt::black),
+    mOutterborderColor(Qt::white),
     mOutterborderPen(),
     mWidth(3),
     mHeight(3),
@@ -57,13 +57,13 @@ void CornerGrabber::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QW
 
 void CornerGrabber::hoverEnterEvent(QGraphicsSceneHoverEvent*)
 {
-    mOutterborderColor = Qt::red;
+    mOutterborderColor = QColor(255, 145, 223); //145, 6, 99;
     this->update(0, 0, mWidth, mHeight);
 }
 
 void CornerGrabber::hoverLeaveEvent(QGraphicsSceneHoverEvent*)
 {
-    mOutterborderColor = Qt::black;
+    mOutterborderColor = Qt::white;
     this->update(0, 0, mWidth, mHeight);
 }
 

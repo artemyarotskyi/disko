@@ -324,7 +324,7 @@ Lamp* MainWindow::createNewLamp()
 {
     Lamp *lamp = new Lamp(0, 0, 53, 53, mCameraId);
     lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-    lamp->setBrush(Qt::black);
+    lamp->setBrush(Qt::white);
 
     subscribeToLampEvents(lamp);
 
@@ -413,7 +413,7 @@ Lamp* MainWindow::createAndRestoreLamp(Lamp &lmp)
     lampRotation(lamp, lmp.lampAngle());
 
     lamp->setFlags(QGraphicsItem::ItemIsMovable|QGraphicsItem::ItemIsFocusable);
-    lamp->setBrush(Qt::black);
+    lamp->setBrush(Qt::white);
 
     subscribeToLampEvents(lamp);
 

@@ -119,7 +119,7 @@ protected slots:
     int mWidth = 600;
     int mHeight = 520;
 
-    const QString mPath = "C:/sqlite/disko.db";
+    const QString mPath = "disko.db";
 
     const QString mCreateRoomMessage = "Room has been created";
     const QString mDeleteRoomMessage = "Room has been deleted";

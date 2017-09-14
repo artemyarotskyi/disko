@@ -33,7 +33,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">background-color: #403F44;
-
+color:#ffffff;
 
 </string>
   </property>
@@ -58,7 +58,6 @@
 {	
  	color:#FFFFFF;
 	background-color:#8E8D93;
-
  }
 
 QPushButton#btnCreateNewRoom:hover
@@ -720,11 +719,6 @@ QPushButton#btnRedo:disabled
 	color : #FFFFFF;
 	background-color:transparent;
 	padding-left:7px;
-}
-
-QLineEdit#txtRoomName::selection
-{
-	color:#8E8D93;
 }</string>
     </property>
     <property name="text">

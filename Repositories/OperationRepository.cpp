@@ -10,7 +10,7 @@ OperationRepository::OperationRepository(const QString &path, QObject *parent) :
     db.setDatabaseName(path);
 
     if(!db.open())
-        qDebug() << "Error: connection with database failed";
+        qDebug() << "Error: connection with database failed" << db.lastError();
     else
         qDebug() << "Database: connection ok";
 }
