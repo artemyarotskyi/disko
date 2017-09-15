@@ -161,6 +161,7 @@ void MainWindow::saveRoom()
     }
 
     OutputRoomList(mRepository->GetAllRooms());
+    //ui->tblViewRooms->
 
     setUpdateAndSaveRoomButtonsState(true, true);
     outputMessage(mSaveRoomMesssage);
@@ -617,16 +618,16 @@ QWidget* MainWindow::addDeleteRoomButtonToRoomList()
     btnDeleteRoom->setStyleSheet("QPushButton#btnDeleteRoom{"
                                  "  border : none;"
                                  "  color : #FFFFFF;"
-                                 "  background-color:#8E8D93;"
+                                 "  background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);"
                                  "}"
 
                                  "QPushButton#btnDeleteRoom:hover{"
-                                 "  color:#910663;"
+                                 "  color:#BEC947;"
                                  "}"
 
                                  "QPushButton#btnDeleteRoom:pressed{"
-                                 "  color:#910663;"
-                                 "  border: 1px solid #910663;"
+                                 "  color:#02ed29;"
+                                 "  border: 1px solid #BEC947;"
                                  "}"
                                  );
 
@@ -676,7 +677,7 @@ void MainWindow::setRoomsListTableWidgetOptions()
                                                          "    margin: 0px 0px 0px 0px;"
                                                          "}"
                                                          "QScrollBar::handle:vertical {"
-                                                         "    background: #cccccc;"   // #18181a; #797979; #909090
+                                                         "    background: #BEC947;"   // #18181a; #797979; #909090
                                                          "    min-height: 0px;"
                                                          "}"
                                                          "QScrollBar::add-line:vertical {"

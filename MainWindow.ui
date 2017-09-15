@@ -57,18 +57,19 @@ color:#ffffff;
      <string notr="true">QPushButton#btnCreateNewRoom
 {	
  	color:#FFFFFF;
-	background-color:#8E8D93;
+	/*background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456); border:none;    */	
  }
 
 QPushButton#btnCreateNewRoom:hover
 {
- 	color:#910663;
+ 	color: #BEC947; 
  } 
 
 QPushButton#btnCreateNewRoom:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:none;
+	border-top:3px solid #BEC947;
 }
 
 QPushButton#btnCreateNewRoom:disabled
@@ -78,6 +79,9 @@ QPushButton#btnCreateNewRoom:disabled
     </property>
     <property name="text">
      <string>Create room</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QGraphicsView" name="graphicsViewCurrentRoom">
@@ -97,7 +101,8 @@ QPushButton#btnCreateNewRoom:disabled
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: #2F2E33;
-border:1px solid #910663;</string>
+border:1px solid #BEC947;
+color:#bec947;</string>
     </property>
    </widget>
    <widget class="QLabel" name="lblTitleListOfRooms">
@@ -140,20 +145,19 @@ border:1px solid #910663;</string>
     <property name="styleSheet">
      <string notr="true">QPushButton#btnSaveRoom
 {	
- 	color:#FFFFFF;
-	background-color:#8E8D93;
-
+ 	color:#FFFFFF;	
  }
 
 QPushButton#btnSaveRoom:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnSaveRoom:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+	color:#BEC947;
+	border:none;
+	border-top:3px solid #BEC947;
 }
 
 QPushButton#btnSaveRoom:disabled
@@ -163,6 +167,9 @@ QPushButton#btnSaveRoom:disabled
     </property>
     <property name="text">
      <string>Save room</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="lblTitleHistory">
@@ -204,19 +211,13 @@ QPushButton#btnSaveRoom:disabled
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">/*background-color: #2F2E33;
-color:#FFFFFF;
-gridline-color:#2F2E33;
-outline:none;
-border:1px solid #910663; */
-
-QTableWidget#tblViewRooms
+     <string notr="true">QTableWidget#tblViewRooms
 {
 	background-color: #2F2E33;
 	color:#FFFFFF;
 	gridline-color:#2F2E33;
 	outline:none;
-	border:1px solid #910663;
+	border:1px solid #BEC947;
 }
 
 QTableWidget#tblViewRooms::item:focus
@@ -228,20 +229,17 @@ QTableWidget#tblViewRooms::item:selected
 {
 	color:#FFFFFF;
 	outline:none;
-	border-bottom:1px solid #910663;
+	border-bottom:1px solid #BEC947;
 }
-
-/*QTableWidget#tblViewRooms::item
-{
-	border-left:1px solid #909090;	
-} */
 
 QTableWidget#tblViewRooms::item:hover
 {
-	background-color: #8E8D93;
-	color:#910663;	
+		
+	color:#BEC947;	
 }
-</string>
+
+
+/* grey: 8E8D93 */</string>
     </property>
     <property name="editTriggers">
      <set>QAbstractItemView::NoEditTriggers</set>
@@ -314,19 +312,18 @@ QTableWidget#tblViewRooms::item:hover
      <string notr="true">QPushButton#btnZoomPlus
 {	
  	color:#FFFFFF;
-	background-color:#8E8D93;
-
  }
 
 QPushButton#btnZoomPlus:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnZoomPlus:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:none;	
+	border-bottom:2px solid #BEC947;
 }
 
 QPushButton#btnZoomPlus:disabled
@@ -336,6 +333,9 @@ QPushButton#btnZoomPlus:disabled
     </property>
     <property name="text">
      <string>+</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnZoomMinus">
@@ -358,20 +358,19 @@ QPushButton#btnZoomPlus:disabled
     <property name="styleSheet">
      <string notr="true">QPushButton#btnZoomMinus
 {	
- 	color:#FFFFFF;
-	background-color:#8E8D93;
-
+ 	color:#FFFFFF;;
  }
 
 QPushButton#btnZoomMinus:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnZoomMinus:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:none;
+	border-bottom:2px solid #BEC947;
 }
 
 QPushButton#btnZoomMinus:disabled
@@ -381,6 +380,9 @@ QPushButton#btnZoomMinus:disabled
     </property>
     <property name="text">
      <string>-</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnUpdateRoom">
@@ -407,20 +409,19 @@ QPushButton#btnZoomMinus:disabled
     <property name="styleSheet">
      <string notr="true">QPushButton#btnUpdateRoom
 {	
- 	color:#FFFFFF;
-	background-color:#8E8D93;
-
+ 	color:#FFFFFF;	
  }
 
 QPushButton#btnUpdateRoom:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnUpdateRoom:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:none;
+	border-top:3px solid #BEC947;
 } 
 
 QPushButton#btnUpdateRoom:disabled
@@ -430,6 +431,9 @@ QPushButton#btnUpdateRoom:disabled
     </property>
     <property name="text">
      <string>Update room</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnAddLamp">
@@ -453,19 +457,19 @@ QPushButton#btnUpdateRoom:disabled
      <string notr="true">QPushButton#btnAddLamp
 {	
  	color:#FFFFFF;
-	background-color:#8E8D93;
-
+	background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);      
+	border:none;	
  }
 
 QPushButton#btnAddLamp:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnAddLamp:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:1px solid #BEC947;
 }
 
 QPushButton#btnAddLamp:disabled
@@ -475,6 +479,9 @@ QPushButton#btnAddLamp:disabled
     </property>
     <property name="text">
      <string>Add lamp</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnColor">
@@ -498,19 +505,20 @@ QPushButton#btnAddLamp:disabled
      <string notr="true">QPushButton#btnColor
 {	
  	color:#FFFFFF;
-	background-color:#8E8D93;
+	background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);      
+	border:none;	
 
  }
 
 QPushButton#btnColor:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnColor:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:1px solid #BEC947;
 }
 
 QPushButton#btnColor:disabled
@@ -520,6 +528,9 @@ QPushButton#btnColor:disabled
     </property>
     <property name="text">
      <string>Choose color</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnDeleteLamp">
@@ -543,19 +554,20 @@ QPushButton#btnColor:disabled
      <string notr="true">QPushButton#btnDeleteLamp
 {	
  	color:#FFFFFF;
-	background-color:#8E8D93;
+	background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);      
+	border:none;	
 
  }
 
 QPushButton#btnDeleteLamp:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnDeleteLamp:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:1px solid #BEC947;
 }
 
 QPushButton#btnDeleteLamp:disabled
@@ -565,6 +577,9 @@ QPushButton#btnDeleteLamp:disabled
     </property>
     <property name="text">
      <string>Delete lamp</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnClearRoom">
@@ -586,19 +601,18 @@ QPushButton#btnDeleteLamp:disabled
      <string notr="true">QPushButton#btnClearRoom
 {	
  	color:#FFFFFF;
-	background-color:#8E8D93;
-
  }
 
 QPushButton#btnClearRoom:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnClearRoom:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:none;
+	border-top:3px solid #BEC947;
 }
 
 QPushButton#btnClearRoom:disabled
@@ -608,6 +622,9 @@ QPushButton#btnClearRoom:disabled
     </property>
     <property name="text">
      <string>Clear room</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnUndo">
@@ -629,19 +646,18 @@ QPushButton#btnClearRoom:disabled
      <string notr="true">QPushButton#btnUndo
 {	
  	color:#FFFFFF;
-	background-color:#8E8D93;
-
  }
 
 QPushButton#btnUndo:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnUndo:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:none;
+	border-bottom:2px solid #BEC947;
 }
 
 QPushButton#btnUndo:disabled
@@ -651,6 +667,9 @@ QPushButton#btnUndo:disabled
     </property>
     <property name="text">
      <string>Undo</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnRedo">
@@ -672,19 +691,18 @@ QPushButton#btnUndo:disabled
      <string notr="true">QPushButton#btnRedo
 {	
  	color:#FFFFFF;
-	background-color:#8E8D93;
-
  }
 
 QPushButton#btnRedo:hover
 {
- 	color:#910663;
+ 	color:#BEC947;
  } 
 
 QPushButton#btnRedo:pressed
 {
- 	color:#910663;
-	border: 1px solid #910663; 
+ 	color:#BEC947;
+	border:none;
+	border-bottom:2px solid #BEC947;
 }
 
 QPushButton#btnRedo:disabled
@@ -695,56 +713,37 @@ QPushButton#btnRedo:disabled
     <property name="text">
      <string>Redo</string>
     </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLineEdit" name="txtRoomName">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>13</y>
       <width>150</width>
-      <height>20</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Gadugi</family>
-      <pointsize>9</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="styleSheet">
      <string notr="true">QLineEdit#txtRoomName
 {
 	border:none;
-	border-bottom:1px solid #910663;
+	border-left:2px solid #BEC947;
 	color : #FFFFFF;
 	background-color:transparent;
 	padding-left:7px;
 }</string>
     </property>
     <property name="text">
-     <string>New Room</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lblRoomName">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>95</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Gadugi</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:#FFFFFF;</string>
-    </property>
-    <property name="text">
-     <string>Room name:</string>
+     <string>Room name</string>
     </property>
    </widget>
    <widget class="QWidget" name="messageWidget" native="true">
@@ -760,16 +759,17 @@ QPushButton#btnRedo:disabled
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:#8E8D93;
-border:1px solid #910663;</string>
+     <string notr="true">color:#FFFFFF;
+background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);      
+border:none;	</string>
     </property>
     <widget class="QLabel" name="lblMessage">
      <property name="geometry">
       <rect>
-       <x>5</x>
-       <y>20</y>
-       <width>171</width>
-       <height>20</height>
+       <x>0</x>
+       <y>0</y>
+       <width>180</width>
+       <height>60</height>
       </rect>
      </property>
      <property name="font">
@@ -784,7 +784,7 @@ border:1px solid #910663;</string>
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">color:#910663;
+      <string notr="true">color:#ffffff;
 border:none;</string>
      </property>
      <property name="text">
