@@ -433,7 +433,7 @@ void MainWindow::OutputRoomList(const QJsonObject &json)
         mCurrentRoomId = subtree.value("id").toString().toInt(); // for update room after save
 
         ui->tblViewRooms->insertRow(ui->tblViewRooms->rowCount());
-        ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 0, new QTableWidgetItem(subtree.value("roomName").toString()));
+        ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 0, new QTableWidgetItem("  "+subtree.value("roomName").toString()));
         ui->tblViewRooms->setItem(ui->tblViewRooms->rowCount()- 1, 1, new QTableWidgetItem(subtree.value("id").toString()));
         ui->tblViewRooms->setCellWidget(roomIndex, 2, addDeleteRoomButtonToRoomList());
     }
@@ -618,16 +618,16 @@ QWidget* MainWindow::addDeleteRoomButtonToRoomList()
     btnDeleteRoom->setStyleSheet("QPushButton#btnDeleteRoom{"
                                  "  border : none;"
                                  "  color : #FFFFFF;"
-                                 "  background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);"
+                                 "  background-color: #27262C;"
                                  "}"
 
                                  "QPushButton#btnDeleteRoom:hover{"
-                                 "  color:#BEC947;"
+                                 "  color:#f73220;"
                                  "}"
 
                                  "QPushButton#btnDeleteRoom:pressed{"
                                  "  color:#02ed29;"
-                                 "  border: 1px solid #BEC947;"
+                                 "  border: 1px solid #f73220;"
                                  "}"
                                  );
 
@@ -668,7 +668,7 @@ void MainWindow::setRoomsListTableWidgetOptions()
 
     ui->tblViewRooms->setColumnWidth(0,140);
     ui->tblViewRooms->setColumnHidden(1, true);
-    ui->tblViewRooms->setColumnWidth(2,41);
+    ui->tblViewRooms->setColumnWidth(2,39);
 
     ui->tblViewRooms->verticalScrollBar()->setStyleSheet("QScrollBar:vertical {"
                                                          "    border: 1px solid #797979;"

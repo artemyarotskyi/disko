@@ -7,7 +7,7 @@ LampLight::LampLight(QGraphicsRectItem *parent, qreal width, qreal height):
     mOutterBorderPen(),
     mLocation(0, 0),
     mDragStart(0, 0),
-    mColor(QColor(47, 46, 51)),
+    mColor(QColor(39, 38, 44)),
     mWidth(width),
     mHeight(height),
     mCornerDragStart(0, 0),

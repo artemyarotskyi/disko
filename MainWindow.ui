@@ -41,9 +41,9 @@ color:#ffffff;
    <widget class="QPushButton" name="btnCreateNewRoom">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>185</x>
       <y>10</y>
-      <width>150</width>
+      <width>120</width>
       <height>41</height>
      </rect>
     </property>
@@ -62,14 +62,14 @@ color:#ffffff;
 
 QPushButton#btnCreateNewRoom:hover
 {
- 	color: #BEC947; 
+ 	color: #F73220; 
  } 
 
 QPushButton#btnCreateNewRoom:pressed
 {
- 	color:#BEC947;
+ 	color:#F73220;
 	border:none;
-	border-top:3px solid #BEC947;
+	border-top:3px solid #F73220;
 }
 
 QPushButton#btnCreateNewRoom:disabled
@@ -100,24 +100,25 @@ QPushButton#btnCreateNewRoom:disabled
      </sizepolicy>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: #2F2E33;
-border:1px solid #BEC947;
-color:#bec947;</string>
+     <string notr="true">background-color: #27262C;
+border:none;
+/*border:1px solid #87868c;*/
+color:#F73220;</string>
     </property>
    </widget>
    <widget class="QLabel" name="lblTitleListOfRooms">
     <property name="geometry">
      <rect>
-      <x>835</x>
-      <y>30</y>
-      <width>60</width>
-      <height>25</height>
+      <x>841</x>
+      <y>35</y>
+      <width>51</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Gadugi</family>
-      <pointsize>14</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -130,9 +131,9 @@ color:#bec947;</string>
    <widget class="QPushButton" name="btnSaveRoom">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>485</x>
       <y>10</y>
-      <width>150</width>
+      <width>120</width>
       <height>41</height>
      </rect>
     </property>
@@ -150,14 +151,14 @@ color:#bec947;</string>
 
 QPushButton#btnSaveRoom:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnSaveRoom:pressed
 {
-	color:#BEC947;
+	color:#F73220;
 	border:none;
-	border-top:3px solid #BEC947;
+	border-top:3px solid #F73220;
 }
 
 QPushButton#btnSaveRoom:disabled
@@ -175,16 +176,16 @@ QPushButton#btnSaveRoom:disabled
    <widget class="QLabel" name="lblTitleHistory">
     <property name="geometry">
      <rect>
-      <x>55</x>
-      <y>272</y>
-      <width>60</width>
-      <height>25</height>
+      <x>59</x>
+      <y>280</y>
+      <width>53</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Gadugi</family>
-      <pointsize>14</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -213,11 +214,12 @@ QPushButton#btnSaveRoom:disabled
     <property name="styleSheet">
      <string notr="true">QTableWidget#tblViewRooms
 {
-	background-color: #2F2E33;
+	background-color: #27262C;
 	color:#FFFFFF;
-	gridline-color:#2F2E33;
+	gridline-color:#27262C;
 	outline:none;
-	border:1px solid #BEC947;
+	/*border:1px solid #87868c;*/
+border:none;
 }
 
 QTableWidget#tblViewRooms::item:focus
@@ -229,13 +231,13 @@ QTableWidget#tblViewRooms::item:selected
 {
 	color:#FFFFFF;
 	outline:none;
-	border-bottom:1px solid #BEC947;
+	/*border-bottom:1px solid #BEC947; */
+	border:none;
 }
 
 QTableWidget#tblViewRooms::item:hover
-{
-		
-	color:#BEC947;	
+{		
+	color:#F73220;	
 }
 
 
@@ -272,16 +274,16 @@ QTableWidget#tblViewRooms::item:hover
    <widget class="QLabel" name="lblTitleZoom">
     <property name="geometry">
      <rect>
-      <x>55</x>
-      <y>210</y>
-      <width>60</width>
-      <height>25</height>
+      <x>65</x>
+      <y>218</y>
+      <width>43</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Gadugi</family>
-      <pointsize>14</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -316,14 +318,13 @@ QTableWidget#tblViewRooms::item:hover
 
 QPushButton#btnZoomPlus:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnZoomPlus:pressed
 {
- 	color:#BEC947;
+ 	color:#F73220;
 	border:none;	
-	border-bottom:2px solid #BEC947;
 }
 
 QPushButton#btnZoomPlus:disabled
@@ -363,14 +364,13 @@ QPushButton#btnZoomPlus:disabled
 
 QPushButton#btnZoomMinus:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnZoomMinus:pressed
 {
- 	color:#BEC947;
+ 	color:#F73220;
 	border:none;
-	border-bottom:2px solid #BEC947;
 }
 
 QPushButton#btnZoomMinus:disabled
@@ -388,9 +388,9 @@ QPushButton#btnZoomMinus:disabled
    <widget class="QPushButton" name="btnUpdateRoom">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>635</x>
       <y>10</y>
-      <width>150</width>
+      <width>120</width>
       <height>41</height>
      </rect>
     </property>
@@ -414,14 +414,14 @@ QPushButton#btnZoomMinus:disabled
 
 QPushButton#btnUpdateRoom:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnUpdateRoom:pressed
 {
- 	color:#BEC947;
+ 	color:#F73220;
 	border:none;
-	border-top:3px solid #BEC947;
+	border-top:3px solid #F73220;
 } 
 
 QPushButton#btnUpdateRoom:disabled
@@ -457,19 +457,20 @@ QPushButton#btnUpdateRoom:disabled
      <string notr="true">QPushButton#btnAddLamp
 {	
  	color:#FFFFFF;
-	background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);      
+	background-color: #27262C;   
 	border:none;	
+	border-radius:10px;
  }
 
 QPushButton#btnAddLamp:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnAddLamp:pressed
 {
- 	color:#BEC947;
-	border:1px solid #BEC947;
+ 	color:#F73220;
+	border:1px solid #F73220;
 }
 
 QPushButton#btnAddLamp:disabled
@@ -481,7 +482,7 @@ QPushButton#btnAddLamp:disabled
      <string>Add lamp</string>
     </property>
     <property name="flat">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="btnColor">
@@ -505,20 +506,20 @@ QPushButton#btnAddLamp:disabled
      <string notr="true">QPushButton#btnColor
 {	
  	color:#FFFFFF;
-	background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);      
+ 	background-color: #27262C;  
 	border:none;	
-
+	border-radius:10px;
  }
 
 QPushButton#btnColor:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnColor:pressed
 {
- 	color:#BEC947;
-	border:1px solid #BEC947;
+ 	color:#F73220;
+	border:1px solid #F73220;
 }
 
 QPushButton#btnColor:disabled
@@ -554,20 +555,20 @@ QPushButton#btnColor:disabled
      <string notr="true">QPushButton#btnDeleteLamp
 {	
  	color:#FFFFFF;
-	background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);      
+	background-color: #27262C;        
 	border:none;	
-
+	border-radius:10px;
  }
 
 QPushButton#btnDeleteLamp:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnDeleteLamp:pressed
 {
- 	color:#BEC947;
-	border:1px solid #BEC947;
+ 	color:#F73220;
+	border:1px solid #F73220;
 }
 
 QPushButton#btnDeleteLamp:disabled
@@ -585,9 +586,9 @@ QPushButton#btnDeleteLamp:disabled
    <widget class="QPushButton" name="btnClearRoom">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>335</x>
       <y>10</y>
-      <width>150</width>
+      <width>120</width>
       <height>41</height>
      </rect>
     </property>
@@ -605,14 +606,14 @@ QPushButton#btnDeleteLamp:disabled
 
 QPushButton#btnClearRoom:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnClearRoom:pressed
 {
- 	color:#BEC947;
+ 	color:#F73220;
 	border:none;
-	border-top:3px solid #BEC947;
+	border-top:3px solid #F73220;
 }
 
 QPushButton#btnClearRoom:disabled
@@ -650,14 +651,13 @@ QPushButton#btnClearRoom:disabled
 
 QPushButton#btnUndo:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnUndo:pressed
 {
- 	color:#BEC947;
+ 	color:#F73220;
 	border:none;
-	border-bottom:2px solid #BEC947;
 }
 
 QPushButton#btnUndo:disabled
@@ -695,14 +695,13 @@ QPushButton#btnUndo:disabled
 
 QPushButton#btnRedo:hover
 {
- 	color:#BEC947;
+ 	color:#F73220;
  } 
 
 QPushButton#btnRedo:pressed
 {
- 	color:#BEC947;
+ 	color:#F73220;
 	border:none;
-	border-bottom:2px solid #BEC947;
 }
 
 QPushButton#btnRedo:disabled
@@ -736,7 +735,7 @@ QPushButton#btnRedo:disabled
      <string notr="true">QLineEdit#txtRoomName
 {
 	border:none;
-	border-left:2px solid #BEC947;
+	border-left:2px solid #F73220;
 	color : #FFFFFF;
 	background-color:transparent;
 	padding-left:7px;
@@ -749,9 +748,9 @@ QPushButton#btnRedo:disabled
    <widget class="QWidget" name="messageWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>520</y>
-      <width>180</width>
+      <x>785</x>
+      <y>515</y>
+      <width>170</width>
       <height>60</height>
      </rect>
     </property>
@@ -759,8 +758,8 @@ QPushButton#btnRedo:disabled
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">color:#FFFFFF;
-background: qlineargradient(x1:0 y1:0, x2:0 y2:1, stop:0 #8E8D93, stop:1 #545456);      
+     <string notr="true">background-color: #27262C;
+color:#F73220;
 border:none;	</string>
     </property>
     <widget class="QLabel" name="lblMessage">
@@ -768,14 +767,14 @@ border:none;	</string>
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>180</width>
+       <width>170</width>
        <height>60</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>Gadugi</family>
-       <pointsize>12</pointsize>
+       <pointsize>11</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -785,7 +784,7 @@ border:none;	</string>
      </property>
      <property name="styleSheet">
       <string notr="true">color:#ffffff;
-border:none;</string>
+border:1px solid #87868c;</string>
      </property>
      <property name="text">
       <string>Message</string>
